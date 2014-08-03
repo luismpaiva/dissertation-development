@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<ruleXML>
+    <rule id="">
+        <concept value="premise">
+                <keyword id=""></keyword>
+                <options>
+                        <option id="" exactmatch="YES"><name></name><distance></distance></option>
+                        <option id="" exactmatch="YES"><name></name><distance></distance></option>
+                        <option id="" exactmatch="NO"><name></name><distance></distance></option>
+                        <option id="" exactmatch="NO"><name></name><distance></distance></option>
+                </options>
+        </concept>
+        <concept value="conclusion">
+                <keyword id=""></keyword>
+                <options>
+                        <option id="" exactmatch="YES"><name></name><distance></distance></option>
+                        <option id="" exactmatch="YES"><name></name><distance></distance></option>
+                        <option id="" exactmatch="NO"><name></name><distance></distance></option>
+                        <option id="" exactmatch="NO"><name></name><distance></distance></option>
+                </options>
+        </concept>
+        <metrics>
+            <metricitem name="confidence" value="" />
+            <metricitem name="support" value="" />
+            <metricitem name="conviction" value="" />
+            <metricitem name="gain" value="" />
+            <metricitem name="lift" value="" />
+            <metricitem name="ps" value="" />
+            <metricitem name="laplace" value="" />
+        </metrics>
+    </rule>    
+</ruleXML>
