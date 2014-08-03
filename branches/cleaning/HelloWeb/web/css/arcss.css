@@ -1,0 +1,115 @@
+/* 
+    Document   : arcss
+    Created on : 4/Dez/2012, 7:10:43
+    Author     : Luis
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* root {display: block;} */
+body {background-color:#000; text-align:left; padding:20px 10px; font: bold 16px sans-serif; cursor: default; color: #EEE; margin: 0}
+
+h1 {padding: 0 0 5px; margin: 0; text-transform:uppercase; color: #EEE}
+
+span {padding: 0; margin: 0; cursor: help;}
+
+form {/*margin: auto;*/ padding: 0; display: inline-block;} 
+select {font: bold 16px sans-serif;  }
+
+.backgroundblock .menu2 { margin: auto; max-width: 730px; padding: 0 10px}
+.backgroundblock .menu2 ul { list-style-type: none; margin: 0; padding: 0}
+.backgroundblock .menu2 ul li {display: inline-block; margin: 0 8px; background-color: #999; color: #EEE; }
+.backgroundblock .menu2 ul li:hover {background-color: #EEE; }
+.backgroundblock .menu2 ul li a {text-decoration: none; width: 190px; font-size: 12px; padding: 3px 10px 2px; text-transform:uppercase; color: #EEE; }
+.backgroundblock .menu2 ul li a:hover {background-color: #EEE; color: #999}
+
+
+.backgroundblock .menu { margin: auto; max-width: 700px; padding: 0 10px}
+/* .backgroundblock .menu form { margin: auto; max-width: 260px; } */
+
+.backgroundblock .menu a {text-decoration: none; width: 190px; background-color: #999; color: #EEE; font-size: 12px; padding: 0px 4px; text-transform:uppercase;}
+.backgroundblock .menu a:hover {background-color: #EEE; color: #999}
+
+.backgroundblock .menu a form { display: none;}
+
+.backgroundblock {margin: auto; background-color: #999999; padding:5px 0px; border-radius:10px; border-color:#999; -moz-box-shadow: 5px 5px 5px #777; -webkit-box-shadow: 5px 5px 5px #777; box-shadow: 5px 5px 5px #777; width: 1000px; }
+.backgroundblock#rulessavedpage {width: 1750px;}
+.backgroundblock h1 {text-align: center}
+
+.titlebox#premise {padding: 0px 140px 0px 150px; margin: 0;}
+.titlebox#conclusion {padding: 0px 270px 0 210px; margin: 0;}
+
+.metrics#support {padding-right: 525px}
+
+.resultsblock {margin: 0; padding:0 75px; }
+.resultsblock ul {margin:0; padding:0; font-size:16px; font-weight: bold;}
+.resultsblock ul:first-child {font-size:18px;}
+.resultsblock ul li {display:inline-block; text-align:center; /*border-right:1px solid #999; border-top:1px solid #999;*/ padding:0;}
+.resultsblock ul li.metrics {width:105px; padding: 0;}
+.resultsblock ul li.num_rules {width:20px;padding: 0;}
+.resultsblock ul li:first-child {/*border-left:1px solid #999;*/}
+.resultsblock ul:last-child {padding-bottom: 0px;}
+.resultsblock ul:last-child li {/*border-bottom:1px solid #999;*/}
+.resultsblock p {padding: 0; margin: 0;}
+
+.rulebox {padding: 0; margin: auto; width: 985px; display: inline-block; border-top: 1px solid #FFF; border-right: 1px solid #FFF; border-left: 1px solid #FFF;}
+.rulebox ul {/* width:980px; */ }
+
+.resultsblock ul {list-style-type: none;}
+.resultsblock ul li.associationrule {padding: 0 5px; margin: 0; min-width: 1010px;}
+.resultsblock ul li.associationrule div {display: inline-block; padding: 0 5px; margin: 0; text-align: left;}
+.resultsblock ul li.associationrule div.associationrulenumber {width: 60px;}
+.resultsblock ul li.associationrule div.associationruleconcept {width: 300px;}
+.resultsblock ul li.associationrule div.associationrulemetric {width: 80px;}
+
+.results {cursor:default; font-weight: bold;}
+
+.footer p {font-size: 10px; text-align: center; color:#EEE; margin-bottom: 0}
+
+.level0 {background-color:#458B00;color:#FFFFFF} /* 100% match */ 
+.level1 {background-color:#FF7878;color:#FFFFFF} /* 80% match */ 
+.level2 {background-color:#FF1414;color:#FFFFFF} /* 60% match */ 
+.level3 {background-color:#DC0000;color:#FFFFFF} /* 40% match */ 
+.level4 {background-color:#6E0000;color:#FFFFFF} /* 20% match */ 
+.level5 {background-color:#320000;color:#FFFFFF} /* 5% match */ 
+
+/*	Concepts Tree Popup Styles	*/
+#popupTree{  
+	display:none;  
+	position:fixed;  
+	_position:absolute; /* hack for internet explorer 6*/  
+	width:auto;  
+	background:#FFFFFF;  
+	border:2px solid #cecece;  
+	z-index:100;  
+	padding:12px;  
+	font-size:13px; 
+}
+#tree {
+        overflow-y: scroll;
+        height: 200px;
+}
+ 
+#popupTreeClose{  
+	font-size:14px;  
+	line-height:14px;  
+	right:6px;  
+	top:4px;  
+	position:absolute;  
+	color:#b22222;  
+	font-weight:700;  
+	display:block;  
+}
+
+#backgroundPopup{  
+	display:none;  
+	position:fixed;  
+	_position:absolute; /* hack for internet explorer 6*/  
+	height:100%;  
+	width:100%;  
+	top:0;  
+	left:0;  
+	background:#000000;  
+	border:1px solid #cecece;  
+	z-index:11;  
+}
