@@ -9,15 +9,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import seks.basic.exceptions.MissingParamException;
 import seks.basic.ontology.OntologyPersistenceImpl;
-import org.jdom2.*;
-import org.jdom2.output.*;
 
 /**
  *
@@ -40,7 +37,6 @@ public class LogHandlerClass {
     public void openFile(String fileName) {
         File file = new File(fileName);
 
-        
         this.fis = null;
         try {
             this.fis = new FileOutputStream(file);

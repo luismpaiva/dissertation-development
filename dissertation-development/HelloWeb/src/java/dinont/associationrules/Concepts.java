@@ -4,23 +4,14 @@
  */
 package dinont.associationrules;
 
-import com.hp.hpl.jena.ontology.Individual;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.rapid_i.repository.wsimport.ProcessContextWrapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import seks.basic.ontology.OntologyInteractionImpl;
 import seks.basic.ontology.OntologyPersistenceImpl;
-import java.sql.Connection;
-import java.sql.*;
-import dinont.utilities.Database;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import seks.basic.exceptions.MissingParamException;
@@ -32,6 +23,7 @@ public class Concepts {
   
   private static String namespace = ("http://www.knowspaces.com/ontology_v1.owl#");
   private ArrayList<String> allkeywords;
+  
   
   public Concepts(OntologyInteractionImpl oi) {
       this.allkeywords = oi.getAllValuesFromProperty("has_Keyword");
@@ -91,7 +83,7 @@ public class Concepts {
   
   public ArrayList<String> getOnegramCandidatesList(String word, OntologyInteractionImpl oi){
     ArrayList<String> arrayListResult = new ArrayList<String> ();
-    ArrayList<String> ngramList = new ArrayList<String> ();
+    ArrayList<String> ngramList/* = new ArrayList<String> () */; 
     ArrayList<String> keywordList = new ArrayList<String> ();
     ArrayList<String> allkeywords;
     int equalKeys = 0;
@@ -422,8 +414,6 @@ public class Concepts {
     return hmResult;
   }
   
-  
-  
   public ArrayList<String> processWord(String wordProcessing, String separator) {
     ArrayList<String> arrayListResult = new ArrayList<String> ();
     int underscorePos;
@@ -472,7 +462,6 @@ public class Concepts {
                         }
     return ngramsMatchColorClass;
   }
-  
   
   public static void main(String[] args){
       try {

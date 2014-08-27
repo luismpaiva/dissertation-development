@@ -33,35 +33,55 @@ import org.jdom2.output.XMLOutputter;
  *
  * @author Luis
  */
-public class DinOntAssociationRules {
-
-    private static String RAPID_MINER_PROCESS_XML = "F:\\Dissertacao\\FrontEnd\\processXML\\process5.XML";
-    private static String ROOT_PATH = "F:\\NetBeansProjects\\HelloWeb\\";
-    private static String LOG_FILE = ROOT_PATH+"DARprocessResultsFromDatabaseV2log.txt";
-    private static String RULE_XML_FILE = ROOT_PATH+"web\\xml\\rules.xml";
+public class Core {
+    public static class CorePathsStruct {
+        public String RAPID_MINER_PROCESS_XML = "F:\\Dissertacao\\FrontEnd\\processXML\\process5.XML";
+        public String ROOT_PATH = "F:\\NetBeansProjects\\HelloWeb\\";
+        public String LOG_FILE = ROOT_PATH+"DARprocessResultsFromDatabaseV2log.txt";
+        public String RULE_XML_FILE = ROOT_PATH+"web\\xml\\rules.xml";
+    } 
+    public static class DataBaseDetails {
+        public String databaseURLName = "jdbc:mysql://localhost:3306/associationrulesdbv2";
+        public String databaseDriverName = "com.mysql.jdbc.Driver";
+        public String databaseUserName = "root";
+        public String databasePasswordName = "";
+    }
+    
+    private static CorePathsStruct _corePath;
+    private static DataBaseDetails _dbDetails;
+    
+    // private String RAPID_MINER_PROCESS_XML = _corePath.RAPID_MINER_PROCESS_XML;
+    // private String ROOT_PATH = "F:\\NetBeansProjects\\HelloWeb\\";
+    // private String LOG_FILE = ROOT_PATH+"DARprocessResultsFromDatabaseV2log.txt";
+    // private String RULE_XML_FILE = _corePath.ROOT_PATH+"web\\xml\\rules.xml";
+    
     private String results = "";
-    private String resultsconcepts = "";
-    private String ruletosave = "";
+    private String resultsConcepts = "";
+    private String ruleToSave = "";
     private String resultsToDatabase = "false";
     private String premise = "";
     private String conclusion = "";
-    private String databaseURLName = "jdbc:mysql://localhost:3306/associationrulesdbv2";
-    private String databaseDriverName = "com.mysql.jdbc.Driver";
+    
+//    private String databaseURLName = "jdbc:mysql://localhost:3306/associationrulesdbv2";
+//    private String databaseDriverName = "com.mysql.jdbc.Driver";
     private String databaseUserName = "root";
     private String databasePasswordName = "";
-    private String[] tablenames = {"rules", "rules_stemmed", "stemmed_word", "concepts"};
+    private String[] tableNames = {"rules", "rules_stemmed", "stemmed_word", "concepts"};
+    
     private static Process rm5;
+    
     private OntologyInteractionImpl oi = new OntologyInteractionImpl();
     private Database dbRules = new Database();
     private Concepts cp = new Concepts(oi);
+    
     private Integer associationruleID = 0;
 
-    public DinOntAssociationRules() {
+    public Core() {
         premise = "empty_premise";
         conclusion = "empty_conclusion";
-        ruletosave = "empty_rule";
+        ruleToSave = "empty_rule";
         results = "";
-        resultsconcepts = "";
+        resultsConcepts = "";
         resultsToDatabase = "false";
     }
 
@@ -73,7 +93,7 @@ public class DinOntAssociationRules {
     // Original name is processResults() - It's working, do not mess with it.
     public void processResults() {
         try {
-            rm5 = new Process(new File(RAPID_MINER_PROCESS_XML));
+            rm5 = new Process(new File(_corePath.RAPID_MINER_PROCESS_XML));
             IOContainer ioResult = rm5.run();
             ExampleSet resultSet;
             int num_rules = 0;
@@ -112,15 +132,15 @@ public class DinOntAssociationRules {
 
 
         } catch (OperatorException ex) {
-            Logger.getLogger(DinOntAssociationRules.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(DinOntAssociationRules.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLException ex) {
-            Logger.getLogger(DinOntAssociationRules.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
  
-    
+     
     public void processResultsToDatabaseV2() {
         int idstemmed_wordA, idstemmed_wordB, lastID_stemmed_word;
 
@@ -128,14 +148,14 @@ public class DinOntAssociationRules {
         Object premise, conclusion, confidence, conviction, laplace, gain, lift, ps, totalSupport;
 
         dbRules = new Database();
-        Connection con = dbRules.databaseConnect(this.databaseURLName, this.databaseUserName, this.databasePasswordName, this.databaseDriverName);
+        Connection con = dbRules.databaseConnect(_dbDetails.databaseURLName, _dbDetails.databaseUserName, _dbDetails.databasePasswordName, _dbDetails.databaseDriverName);
 
-        for (int idclean = 0, idclean2 = tablenames.length; idclean < idclean2; idclean++) {
-            dbRules.databaseDeleteAllRecordsFromTable(con, this.tablenames[idclean]);
+        for (int idclean = 0, idclean2 = tableNames.length; idclean < idclean2; idclean++) {
+            dbRules.databaseDeleteAllRecordsFromTable(con, tableNames[idclean]);
         }
 
         try {
-            rm5 = new Process(new File(RAPID_MINER_PROCESS_XML));
+            rm5 = new Process(new File(_corePath.RAPID_MINER_PROCESS_XML));
 
             IOContainer ioResult = rm5.run();
             ExampleSet resultSet;
@@ -149,26 +169,26 @@ public class DinOntAssociationRules {
                         premiseTMP = premiseTMP.replace("]", "");
                         premise = premiseTMP.replace("[", "");
 
-                        idstemmed_wordA = dbRules.databaseContainsConcept(con, this.tablenames[2], "stemmed_word", premise.toString());
+                        idstemmed_wordA = dbRules.databaseContainsConcept(con, this.tableNames[2], "stemmed_word", premise.toString());
                         if (idstemmed_wordA == 0) {
-                            lastID_stemmed_word = dbRules.databaseGetTableLastID(con, this.tablenames[2], "idstemmed_word");
+                            lastID_stemmed_word = dbRules.databaseGetTableLastID(con, this.tableNames[2], "idstemmed_word");
                             String[] values = {premise.toString()};
                             String query = "INSERT INTO stemmed_word(idstemmed_word, stemmed_word) values(?, ?)";
                             dbRules.databaseInsertOneDataRecord(con, query, 2, values, lastID_stemmed_word);
-                            idstemmed_wordA = dbRules.databaseContainsConcept(con, this.tablenames[2], "stemmed_word", premise.toString());
+                            idstemmed_wordA = dbRules.databaseContainsConcept(con, this.tableNames[2], "stemmed_word", premise.toString());
                         }
 
                         conclusionTMP = (String) resultSet.getExample(i).get("Conclusion");
                         conclusionTMP = conclusionTMP.replace("[", "");
                         conclusion = conclusionTMP.replace("]", "");
 
-                        idstemmed_wordB = dbRules.databaseContainsConcept(con, this.tablenames[2], "stemmed_word", conclusion.toString());
+                        idstemmed_wordB = dbRules.databaseContainsConcept(con, this.tableNames[2], "stemmed_word", conclusion.toString());
                         if (idstemmed_wordB == 0) {
-                            lastID_stemmed_word = dbRules.databaseGetTableLastID(con, this.tablenames[2], "idstemmed_word");
+                            lastID_stemmed_word = dbRules.databaseGetTableLastID(con, this.tableNames[2], "idstemmed_word");
                             String[] values = {conclusion.toString()};
                             String query = "INSERT INTO stemmed_word(idstemmed_word, stemmed_word) values(?, ?)";
                             dbRules.databaseInsertOneDataRecord(con, query, 2, values, lastID_stemmed_word);
-                            idstemmed_wordB = dbRules.databaseContainsConcept(con, this.tablenames[2], "stemmed_word", conclusion.toString());
+                            idstemmed_wordB = dbRules.databaseContainsConcept(con, this.tableNames[2], "stemmed_word", conclusion.toString());
                         }
 
                         confidence = resultSet.getExample(i).get("Confidence");
@@ -208,11 +228,11 @@ public class DinOntAssociationRules {
 
 
         } catch (OperatorException ex) {
-            Logger.getLogger(DinOntAssociationRules.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(DinOntAssociationRules.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
         } catch (XMLException ex) {
-            Logger.getLogger(DinOntAssociationRules.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Core.class.getName()).log(Level.SEVERE, null, ex);
         }
         dbRules.databaseDisconnect(con);
     }
@@ -221,7 +241,7 @@ public class DinOntAssociationRules {
     public void processResultsFromDatabaseV4() {
         // Variable declaration section -----------------------
         Object premise, conclusion, confidence, conviction, laplace, gain, lift, ps, totalSupport;
-        Connection con = dbRules.databaseConnect(this.databaseURLName, this.databaseUserName, this.databasePasswordName, this.databaseDriverName);
+        Connection con = dbRules.databaseConnect(this._dbDetails.databaseURLName, this._dbDetails.databaseUserName, this._dbDetails.databasePasswordName, this._dbDetails.databaseDriverName);
 
         HashMap<String, ArrayList<String>> hmConcepts = new HashMap<String, ArrayList<String>>();
         HashMap<String, ArrayList<String>> ngramsListHM = new HashMap<String, ArrayList<String>>();
@@ -246,7 +266,7 @@ public class DinOntAssociationRules {
         
         Integer ngramsWordCount;
 
-        log.openLogFile(LOG_FILE);
+        log.openLogFile(_corePath.LOG_FILE);
         
         
         // XML creation - creates the elements necessary for the XML Rules file
@@ -285,7 +305,7 @@ public class DinOntAssociationRules {
         // End of XML initializing
         
         dbRules = new Database();
-        rulesHM = dbRules.databaseGetRules(con, this.tablenames[1]);
+        rulesHM = dbRules.databaseGetRules(con, this.tableNames[1]);
         dbRules.databaseDisconnect(con);
 
         if (!rulesHM.isEmpty()) {
@@ -953,7 +973,7 @@ public class DinOntAssociationRules {
                 // HTML Vector construction 
                 System.out.println("(" + (i + 1) + ")" + "conviction:" + conviction + "-gain:" + gain + "-lift:" + lift + "-laplace:" + laplace + "-ps:" + ps + "-total Support:" + totalSupport + "-confidence:" + confidence);
 
-                resultsconcepts += "<div class=\"rulebox\" id=\"rulebox" + (i + 1) + "\"><form name=\"saveonerule\" action=\"rulessaved.jsp\" method=\"post\" target=\"_blank\">"
+                resultsConcepts += "<div class=\"rulebox\" id=\"rulebox" + (i + 1) + "\"><form name=\"saveonerule\" action=\"rulessaved.jsp\" method=\"post\" target=\"_blank\">"
                         + "<p class=\"num_rules\">Rule #" + (i + 1) + "</p><ul>"
                         + "<li title=\"Premise\"><div class=\"premisetitle\">Premise</div><div class=\"premisevalue\">" + premiseWordString + "</div></li>"
                         + "<li title=\"Conclusion\"><div class=\"conclusiontitle\">Conclusion</div><div class=\"conclusionvalue\">" + conclusionWordString + "</div></li></ul>"
@@ -961,12 +981,12 @@ public class DinOntAssociationRules {
                         + "<li title=\"Conviction\" class=\"metrics\"><div class=\"metrictitle\">Conviction</div><div class=\"metricvalue\" name=\"conviction\">";
 
                 if (conviction.toString().contains("8888")) {
-                    resultsconcepts += "Infinity";
+                    resultsConcepts += "Infinity";
                 } else {
-                    resultsconcepts += conviction;
+                    resultsConcepts += conviction;
                 }
 
-                resultsconcepts += "</div></li>"
+                resultsConcepts += "</div></li>"
                         + "<li title=\"Gain\" class=\"metrics\"><div class=\"metrictitle\">Gain</div><div class=\"metricvalue\">" + gain + "</div></li>"
                         + "<li title=\"Laplace\" class=\"metrics\"><div class=\"metrictitle\">Laplace</div><div class=\"metricvalue\">" + laplace + "</div></li>"
                         + "<li title=\"Lift\" class=\"metrics\"><div class=\"metrictitle\">Lift</div><div class=\"metricvalue\">" + lift + "</div></li>"
@@ -1012,7 +1032,7 @@ public class DinOntAssociationRules {
         prettyFormat.setExpandEmptyElements(false);
         XMLOutputter prettyXmlOut = new XMLOutputter(prettyFormat);
 
-        ruleXmlFile.openFile(RULE_XML_FILE);
+        ruleXmlFile.openFile(_corePath.RULE_XML_FILE);
         ruleXmlFile.printToFile(prettyXmlOut.outputString(doc));
         ruleXmlFile.closeFile();
 
@@ -1021,10 +1041,10 @@ public class DinOntAssociationRules {
 
     public void processGetRulesFromDb() {
         dbRules = new Database();
-        Connection con = dbRules.databaseConnect(this.databaseURLName, this.databaseUserName, this.databasePasswordName, this.databaseDriverName);
+        Connection con = dbRules.databaseConnect(this._dbDetails.databaseURLName, this._dbDetails.databaseUserName, this._dbDetails.databasePasswordName, this._dbDetails.databaseDriverName);
         HashMap<Integer, ArrayList<String>> rulesHM = new HashMap<Integer, ArrayList<String>>();
         ArrayList<String> ruleValuesAL = new ArrayList<String>();
-        ruletosave = "<ul class=\"associationrule\"><li class=\"associationrule\">"
+        ruleToSave = "<ul class=\"associationrule\"><li class=\"associationrule\">"
                 + "<div class=\"associationrulenumber\">Rules</div>"
                 + "<div class=\"associationruleconcept\">Premise</div>"
                 + "<div class=\"associationruleconcept\">Conclusion</div>"
@@ -1041,10 +1061,10 @@ public class DinOntAssociationRules {
         if (!rulesHM.isEmpty()) {
             for (int i = 1; i <= rulesHM.size(); i++) {
                 ruleValuesAL = rulesHM.get(i);
-                ruletosave += "<li class=\"associationrule\"><div class=\"associationrulenumber\">" + i + "</div>";
+                ruleToSave += "<li class=\"associationrule\"><div class=\"associationrulenumber\">" + i + "</div>";
                 if (!ruleValuesAL.isEmpty()) {
                     if (associationruleID == i) {
-                        ruletosave += "<div title=\"Rule Selected\" class=\"associationruleconcept\" style=\"color: red;\">" + ruleValuesAL.get(0) + "</div>"
+                        ruleToSave += "<div title=\"Rule Selected\" class=\"associationruleconcept\" style=\"color: red;\">" + ruleValuesAL.get(0) + "</div>"
                                 + "<div title=\"Rule Selected\" class=\"associationruleconcept\" style=\"color: red;\">" + ruleValuesAL.get(1) + "</div>"
                                 + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(8) + "</div>"
                                 + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(2) + "</div>"
@@ -1054,7 +1074,7 @@ public class DinOntAssociationRules {
                                 + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(6) + "</div>"
                                 + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(7) + "</div>";
                     } else {
-                        ruletosave += "<div class=\"associationruleconcept\">" + ruleValuesAL.get(0) + "</div>"
+                        ruleToSave += "<div class=\"associationruleconcept\">" + ruleValuesAL.get(0) + "</div>"
                                 + "<div class=\"associationruleconcept\">" + ruleValuesAL.get(1) + "</div>"
                                 + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(8) + "</div>"
                                 + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(2) + "</div>"
@@ -1065,16 +1085,16 @@ public class DinOntAssociationRules {
                                 + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(7) + "</div>";
                     }
                 }
-                ruletosave += "</li>";
+                ruleToSave += "</li>";
             }
         }
-        ruletosave = ruletosave.replace("_Individual", "").replace("_", " ").replace("8888.0000", "Infinity") + "</ul>";
+        ruleToSave = ruleToSave.replace("_Individual", "").replace("_", " ").replace("8888.0000", "Infinity") + "</ul>";
         dbRules.databaseDisconnect(con);
     }
 
     public void processInsertOneChoosenRuleInDB(Integer rulenumber, String premise1, String conclusion1) {
         dbRules = new Database();
-        Connection con = dbRules.databaseConnect(this.databaseURLName, this.databaseUserName, this.databasePasswordName, this.databaseDriverName);
+        Connection con = dbRules.databaseConnect(this._dbDetails.databaseURLName, this._dbDetails.databaseUserName, this._dbDetails.databasePasswordName, this._dbDetails.databaseDriverName);
         // 1 verificar se a regra ja existe, se não, insere 
         // 1a verificar se os conceitos ja existem na bd, se não insere
         // inserir regra referenciando as métricas respectivas todas, ou referência aos mesmos
@@ -1089,13 +1109,13 @@ public class DinOntAssociationRules {
         int idcontain;
         associationruleID = 0;
         for (int m = 0; m < concepts.length; m++) {
-            con = dbRules.databaseConnect(this.databaseURLName, this.databaseUserName, this.databasePasswordName, this.databaseDriverName);
-            idcontain = dbRules.databaseContainsConcept(con, this.tablenames[3], "name", concepts[m]);
+            con = dbRules.databaseConnect(this._dbDetails.databaseURLName, this._dbDetails.databaseUserName, this._dbDetails.databasePasswordName, this._dbDetails.databaseDriverName);
+            idcontain = dbRules.databaseContainsConcept(con, this.tableNames[3], "name", concepts[m]);
             //dbRules.databaseDisconnect(con);
             if (idcontain == 0) {
-                con = dbRules.databaseConnect(this.databaseURLName, this.databaseUserName, this.databasePasswordName, this.databaseDriverName);
+                con = dbRules.databaseConnect(this._dbDetails.databaseURLName, this._dbDetails.databaseUserName, this._dbDetails.databasePasswordName, this._dbDetails.databaseDriverName);
                 query = "INSERT INTO concepts(idconcepts, name) values(?, ?)";
-                lastID = dbRules.databaseGetTableLastID(con, this.tablenames[3], "idconcepts");
+                lastID = dbRules.databaseGetTableLastID(con, this.tableNames[3], "idconcepts");
                 values[0] = concepts[m];
 
                 dbRules.databaseInsertOneDataRecord(con, query, 2, values, lastID);
@@ -1114,7 +1134,7 @@ public class DinOntAssociationRules {
         System.out.println("rulenumber (idrules) (" + rulenumber + ") conceptA:" + ruleStr[0] + " conceptB:" + ruleStr[1] + ", rulenumber (stemmed)" + ruleStr[2]);
         idcontain = dbRules.databaseContainsRule(con, ruleStr[0], ruleStr[1], ruleStr[2]);
         if (idcontain == 0) {
-            lastID = dbRules.databaseGetTableLastID(con, this.tablenames[0], "idrules");
+            lastID = dbRules.databaseGetTableLastID(con, this.tableNames[0], "idrules");
             query = "INSERT INTO rules(idrules, idConceptA, idConceptB, idrules_stemmed) values(?, ?, ?, ?)";
             associationruleID = lastID + 1;
             if (dbRules.databaseInsertOneDataRecord(con, query, 4, ruleStr, lastID)) {
@@ -1150,18 +1170,18 @@ public class DinOntAssociationRules {
     /**
      * @return the results
      */
-    public String getRuletosave() {
+    public String getRuleToSave() {
         //rapidminerInit();
         //processResults();
         //rulessavedlist = "I have something";
         this.processGetRulesFromDb();
-        return ruletosave;
+        return ruleToSave;
     }
 
     /**
      * @param aResults the results to set
      */
-    public void setRuletosave(String aResults) {
+    public void setRuleToSave(String aResults) {
         Integer rulenumber = Integer.parseInt(aResults);
         this.processInsertOneChoosenRuleInDB(rulenumber, premise, conclusion);
     }
@@ -1169,20 +1189,20 @@ public class DinOntAssociationRules {
     /**
      * @return the results
      */
-    public String getResultsconcepts() {
+    public String getResultsConcepts() {
         //rapidminerInit();
         //processResultsConcepts();
         //processResultsFromDatabaseV2();
         //processResultsFromDatabaseV3();
         processResultsFromDatabaseV4();
-        return resultsconcepts;
+        return resultsConcepts;
     }
 
     /**
      * @param aResults the results to set
      */
-    public void setResultsconcepts(String aResults) {
-        this.resultsconcepts = aResults;
+    public void setResultsConcepts(String aResults) {
+        this.resultsConcepts = aResults;
     }
 
     public void setResultsToDatabase(String aResults) {
