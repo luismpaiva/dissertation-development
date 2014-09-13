@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Association Rules Helper</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="js/jquery-1.10.2.js"></script>
+        <script src="js/jquery-ui-1.10.4.custom.js"></script>
+        <script src="js/jquery-ui-1.10.4.custom.min.js"></script>    
+        <link rel="stylesheet" href="css/smoothness/jquery-ui-1.10.4.custom.css" />
+        <link rel="stylesheet" href="css/arcss_1.css" />
+        <style>     
+            .custom-combobox { position: relative; display: inline-block; }
+            .custom-combobox-toggle { position: absolute; top: 0; bottom: 0; margin-left: -1px; padding: 0; /* support: IE7 */ *height: 1.7em; *top: 0.1em; }
+            .custom-combobox-input { margin: 0; padding: 0.3em; }
+            .label {width: 100px; display: inline-block;}
+            
+        </style>
+        <script>
+            $(function() {
+                $( "#tabs" ).tabs();
+                $( "#accordion" ).accordion({collapsible: true, active: false, heightStyle: auto });
+                $( "#radio" ).buttonset();
+                $( "#rerun" ).button().click(function() {
+                          alert( "Running the last action" );
+                            }).next().button({
+                                        text: false,
+                                        icons: {
+                                          primary: "ui-icon-triangle-1-s"
+                                        }
+                                      })
+                                      .click(function() {
+                                        var menu = $( this ).parent().next().show().position({
+                                          my: "left top",
+                                          at: "left bottom",
+                                          of: this
+                                        });
+                                        $( document ).one( "click", function() {
+                                          menu.hide();
+                                        });
+                                        return false;
+                                      })
+                                      .parent()
+                                        .buttonset()
+                                        .next()
+                                          .hide()
+                                          .menu();
+            });
+        (function( $ ) {
+            $.widget( "custom.combobox", {
+              _create: function() {
+                this.wrapper = $( "<span>" )
+                  .addClass( "custom-combobox" )
+                  .insertAfter( this.element );
+
+                this.element.hide();
+                this._createAutocomplete();
+                this._createShowAllButton();
+              },
+
+              _createAutocomplete: function() {
+                var selected = this.element.children( ":selected" ),
+                  value = selected.val() ? selected.text() : "";
+
+                this.input = $( "<input>" )
+                  .appendTo( this.wrapper )
+                  .val( value )
+                  .attr( "title", "" )
+                  .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+                  .autocomplete({
+                    delay: 0,
+                    minLength: 0,
+                    source: $.proxy( this, "_source" )
+                  })
+                  .tooltip({
+                    tooltipClass: "ui-state-highlight"
+                  });
+
+                this._on( this.input, {
+                  autocompleteselect: function( event, ui ) {
+                    ui.item.option.selected = true;
+                    this._trigger( "select", event, {
+                      item: ui.item.option
+                    });
+                  },
+
+                  autocompletechange: "_removeIfInvalid"
+                });
+              },
+
+              _createShowAllButton: function() {
+                var input = this.input,
+                  wasOpen = false;
+
+                $( "<a>" )
+                  .attr( "tabIndex", -1 )
+                  .attr( "title", "Show All Items" )
+                  .tooltip()
+                  .appendTo( this.wrapper )
+                  .button({
+                    icons: {
+                      primary: "ui-icon-triangle-1-s"
+                    },
+                    text: false
+                  })
+                  .removeClass( "ui-corner-all" )
+                  .addClass( "custom-combobox-toggle ui-corner-right" )
+                  .mousedown(function() {
+                    wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+                  })
+                  .click(function() {
+                    input.focus();
+
+                    // Close if already visible
+                    if ( wasOpen ) {
+                      return;
+                    }
+
+                    // Pass empty string as value to search for, displaying all results
+                    input.autocomplete( "search", "" );
+                  });
+              },
+
+              _source: function( request, response ) {
+                var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+                response( this.element.children( "option" ).map(function() {
+                  var text = $( this ).text();
+                  if ( this.value && ( !request.term || matcher.test(text) ) )
+                    return {
+                      label: text,
+                      value: text,
+                      option: this
+                    };
+                }) );
+              },
+
+              _removeIfInvalid: function( event, ui ) {
+
+                // Selected an item, nothing to do
+                if ( ui.item ) {
+                  return;
+                }
+
+                // Search for a match (case-insensitive)
+                var value = this.input.val(),
+                  valueLowerCase = value.toLowerCase(),
+                  valid = false;
+                this.element.children( "option" ).each(function() {
+                  if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+                    this.selected = valid = true;
+                    return false;
+                  }
+                });
+
+                // Found a match, nothing to do
+                if ( valid ) {
+                  return;
+                }
+
+                // Remove invalid value
+                this.input
+                  .val( "" )
+                  .attr( "title", value + " didn't match any item" )
+                  .tooltip( "open" );
+                this.element.val( "" );
+                this._delay(function() {
+                  this.input.tooltip( "close" ).attr( "title", "" );
+                }, 2500 );
+                this.input.data( "ui-autocomplete" ).term = "";
+              },
+
+              _destroy: function() {
+                this.wrapper.remove();
+                this.element.show();
+              }
+            });
+          })( jQuery );
+
+          $(function() {
+            $( "#combobox" ).combobox();
+            $( "#combobox2" ).combobox();
+          });            
+        </script>
+        <style>
+            
+        </style>
+        
+    </head>
+    <body style>
+        <h1>Association Rules Helper</h1>
+        <div id=tabs>
+            <ul>
+                <li><a href=#tab1>Home</a></li>
+                <li><a href=#tab2>Rules discovered</a></li>
+                <li><a href=#tab3>Rules in database</a></li>
+                <li><a href=#tab4>Tab 3</a></li>
+            </ul>
+            <div id=tab1>Contents of the first tab</div>
+            <div id=tab2>
+                <div id="accordion">
+                    <h3>Rule 1 - «Premise»«Conclusion»</h3>
+                    <div>
+                      <form>
+                        <div id="radio">
+                          <input type="radio" id="radio1" name="radio"><label for="radio1">Choice 1</label>
+                          <input type="radio" id="radio2" name="radio" checked="checked"><label for="radio2">Choice 2</label>
+                          <input type="radio" id="radio3" name="radio"><label for="radio3">Choice 3</label>
+                        </div>
+                      </form>
+                    </div>
+                    <h3>Rule 2 - «Premise»«Conclusion»</h3>
+                    <div>
+                        <div>
+                          <button id="rerun">Run last action</button>
+                          <button id="select">Select an action</button>
+                        </div>
+                        <ul>
+                          <li><a href="#">Open...</a></li>
+                          <li><a href="#">Save</a></li>
+                          <li><a href="#">Delete</a></li>
+                        </ul>
+                      </div>
+                    <h3>Rule 3 - «Premise»«Conclusion»</h3>
+                    <div>
+                        <div class="ui-widget">
+                            <p>
+                                <label class="label">Premise </label>
+                                <select id="combobox">
+                                  <option value=""></option>
+                                  <option value="ActionScript">ActionScript</option>
+                                  <option value="AppleScript">AppleScript</option>
+                                  <option value="Asp">Asp</option>
+                                  <option value="C">C</option>
+                                  <option value="Csharp">C#</option>
+                                  <option value="Cplusplus">C++</option>
+                                  <option value="Clojure">Clojure</option>
+                                  <option value="ColdFusion">ColdFusion</option>
+                                  <option value="Erlang">Erlang</option>
+                                  <option value="Fortran">Fortran</option>
+                                  <option value="Java">Java</option>
+                                  <option value="JavaScript">JavaScript</option>
+                                  <option value="Perl">Perl</option>
+                                  <option value="PHP">PHP</option>
+                                  <option value="Python">Python</option>
+                                  <option value="Ruby">Ruby</option>
+                                </select>
+                            </p>
+                            <p>
+                                <label class="label">Conclusion </label>
+                                <select id="combobox2">
+                                  <option value=""></option>
+                                  <option value="ActionScript">ActionScript</option>
+                                  <option value="AppleScript">AppleScript</option>
+                                  <option value="Asp">Asp</option>
+                                  <option value="C">C</option>
+                                  <option value="Csharp">C#</option>
+                                  <option value="Cplusplus">C++</option>
+                                  <option value="Clojure">Clojure</option>
+                                  <option value="ColdFusion">ColdFusion</option>
+                                  <option value="Erlang">Erlang</option>
+                                  <option value="Fortran">Fortran</option>
+                                  <option value="Java">Java</option>
+                                  <option value="JavaScript">JavaScript</option>
+                                  <option value="Perl">Perl</option>
+                                  <option value="PHP">PHP</option>
+                                  <option value="Python">Python</option>
+                                  <option value="Ruby">Ruby</option>
+                                </select>
+                            </p>
+
+                        </div>
+                    </div>
+                    <h3>Rule 4 - «Premise»«Conclusion»</h3>
+                    <div>
+                      <p>
+                      Cras dictum. Pellentesque habitant morbi tristique senectus et netus
+                      et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in
+                      faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia
+                      mauris vel est.
+                      </p>
+                      <p>
+                      Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus.
+                      Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+                      inceptos himenaeos.
+                      </p>
+                    </div>
+                </div>
+            </div>
+            <div id=tab3>Contents of the third tab</div>
+            <div id=tab4>Contents of the forth tab</div>
+            </div>
+        
+    </body>
+</html>

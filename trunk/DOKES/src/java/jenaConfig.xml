@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : jenaConfig.xml
+    Created on : 28 de Novembro de 2011, 23:56
+    Author     : Paulo Figueiras
+    Description:
+        Configuration file for ontology map schema.
+-->
+
+<root>
+    <ont_file>knowspaces_v9.owl</ont_file>
+    <db_url>jdbc:mysql://localhost:3306/ontomap</db_url>
+    <db_user>root</db_user>
+    <db_passwd> </db_passwd>
+    <db>MySQL</db>
+    <db_driver>com.mysql.jdbc.Driver</db_driver>
+</root>
