@@ -11,7 +11,7 @@
         $(document).ready(initConceptsTree());
     </script>
     <a id="popupTreeClose" href="#" onClick="javascript:disablePopup('#popupTree');">x</a>
-    <form action="" id="treeForm" method="post"> 
+    <!-- <form action="" id="treeForm" method="post"> -->
         <fieldset>
             <label>Concept</label>
             <input type="text" id="concept" name="concept" />
@@ -22,5 +22,5 @@
             <input type="text" id="parent" name="parent" contenteditable="false" readonly="readonly" />
             <input type="submit" id="submitConceptsButton" value="Submit" name="submitConceptsButton" onclick="javascript:addNewConcept();" />
         </fieldset>
-    </form>
+    <!-- </form> -->
 </html>
