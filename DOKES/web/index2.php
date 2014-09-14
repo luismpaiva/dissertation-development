@@ -1,7 +1,7 @@
 <!-- 
     Document   : index
     Created on : 22/Set/2012, 1:14:46
-    Author     : Luis
+    Author     : Luis Paiva
 -->
 <!DOCTYPE html>
 <html>
@@ -24,7 +24,7 @@
             </ul>
         </div>
         <div class="footer">
-          <p>Webdeveloper: Luis Paiva</p>
+          <p>Webdeveloper: Luis Paiva Paiva</p>
         </div>
       </div>
         <div>

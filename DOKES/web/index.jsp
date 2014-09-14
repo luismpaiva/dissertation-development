@@ -1,7 +1,7 @@
 <%-- 
     Document   : index
     Created on : 22/Set/2012, 1:14:46
-    Author     : Luis
+    Author     : Luis Paiva
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -26,7 +26,7 @@
             </ul>
         </div>
         <div class="footer">
-          <p>Webdeveloper: Luis Paiva</p>
+          <p>Webdeveloper: Luis Paiva Paiva</p>
         </div>
       </div>
         <div>

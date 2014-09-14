@@ -18,7 +18,7 @@ import seks.basic.ontology.OntologyInteractionImpl;
 
 /**
  *
- * @author Luis
+ * @author Luis Paiva
  */
 public class AddConceptToOntoServlet extends HttpServlet {
 

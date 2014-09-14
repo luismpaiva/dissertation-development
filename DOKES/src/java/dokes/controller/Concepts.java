@@ -1,9 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dokes.controller;
 
+//<editor-fold defaultstate="collapsed" desc="Imports">  
 import java.util.ArrayList;
 import java.util.HashMap;
 import seks.basic.ontology.OntologyInteractionImpl;
@@ -15,18 +12,49 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import seks.basic.exceptions.MissingParamException;
+//</editor-fold>
+
 /**
  *
- * @author Luis
+ * @author Luis Paiva
  */
 public class Concepts {
   
+  //<editor-fold defaultstate="collapsed" desc="Variables">  
+    
   private static String namespace = ("http://www.knowspaces.com/ontology_v1.owl#");
   private ArrayList<String> allkeywords;
+  
+  //</editor-fold>
+  
+  //<editor-fold defaultstate="collapsed" desc="Constructors">  
   
   public Concepts(OntologyInteractionImpl oi) {
       this.allkeywords = oi.getAllValuesFromProperty("has_Keyword");
   }
+  
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="Methods">  
+
+  public ArrayList<String> processWord(String wordProcessing, String separator) {
+    ArrayList<String> arrayListResult = new ArrayList<String> ();
+    int underscorePos;
+    
+    while (wordProcessing.contains(separator)){
+      underscorePos = wordProcessing.indexOf(separator);
+      arrayListResult.add(wordProcessing.substring(0, underscorePos));
+      wordProcessing = wordProcessing.substring(underscorePos+1);
+    }
+    
+    arrayListResult.add(wordProcessing);  
+    
+    return arrayListResult;
+  }
+
+  //</editor-fold>
+
+  //<editor-fold defaultstate="collapsed" desc="Properties">  
   
   /**
    * 
@@ -74,12 +102,11 @@ public class Concepts {
     return xpto.size();
   }
   
-  /**
-   * When it does not find an exact match, it tries to find candidates for an aproximate match
+  /** When it does not find an exact match, it tries to find candidates for an aproximate match
+   * 
    * @param word (the n-gram word to evaluate)
    * @return 0 for no approximate matches or the arrayListResult with all candidate matches
    */
-  
   public ArrayList<String> getOnegramCandidatesList(String word, OntologyInteractionImpl oi){
     ArrayList<String> arrayListResult = new ArrayList<String> ();
     ArrayList<String> ngramList = new ArrayList<String> ();
@@ -413,23 +440,6 @@ public class Concepts {
     return hmResult;
   }
   
-  
-  
-  public ArrayList<String> processWord(String wordProcessing, String separator) {
-    ArrayList<String> arrayListResult = new ArrayList<String> ();
-    int underscorePos;
-    
-    while (wordProcessing.contains(separator)){
-      underscorePos = wordProcessing.indexOf(separator);
-      arrayListResult.add(wordProcessing.substring(0, underscorePos));
-      wordProcessing = wordProcessing.substring(underscorePos+1);
-    }
-    
-    arrayListResult.add(wordProcessing);  
-    
-    return arrayListResult;
-  }
-  
   public HashMap<String, ArrayList<String>> getConceptsRelated(ArrayList<String> keywordList, OntologyInteractionImpl oi){
     HashMap<String,ArrayList<String>> conceptsList = new HashMap<String,ArrayList<String>> ();
     
@@ -463,7 +473,10 @@ public class Concepts {
                         }
     return ngramsMatchColorClass;
   }
+
+  //</editor-fold>
   
+  //<editor-fold defaultstate="collapsed" desc="Main">  
   
   public static void main(String[] args){
       try {
@@ -726,4 +739,6 @@ public class Concepts {
     
     
     }
+  //</editor-fold>
+
 }

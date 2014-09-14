@@ -1,7 +1,7 @@
 <%-- 
     Document   : rulessaved
     Created on : 25/Mar/2013, 1:19:43
-    Author     : Luis
+    Author     : Luis Paiva
 --%>
 
 <%@page import="seks.basic.ontology.OntologyInteractionImpl"%>
@@ -44,7 +44,7 @@
             <jsp:getProperty name="rulessavedbean" property="ruletosave" />
         </div>
         <div class="footer">
-          <p>Webdeveloper: Luis Paiva</p>
+          <p>Webdeveloper: Luis Paiva Paiva</p>
         </div>
       </div>
     </body>

@@ -1,8 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dokes.controller.utilities;
+
+//<editor-fold defaultstate="collapsed" desc="Imports">  
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,28 +17,39 @@ import seks.basic.ontology.OntologyPersistenceImpl;
 import org.jdom2.*;
 import org.jdom2.output.*;
 
+//</editor-fold>
+
 /**
  *
- * @author Luis
+ * @author Luis Paiva
  */
 public class LogHandlerClass {
+    
+    //<editor-fold defaultstate="collapsed" desc="Variables">  
     
     private FileOutputStream fis = null;
     private PrintStream out = null;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); 
     private SimpleDateFormat sdfdate = new SimpleDateFormat("dd/MM/YYYY");
     private Calendar cal;
+    
     // private File sourcePath = new File("");
     
-    public void LogHandlerClass()
-    {
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Constructors">  
+    
+    public void LogHandlerClass() {
         // this.sourcePath = new File (sourcePath.getAbsolutePath());
     };
     
+    //</editor-fold>
+    
+    //<editor-fold defaultstate="collapsed" desc="Methods">  
+    
     public void openFile(String fileName) {
         File file = new File(fileName);
-
-        
+    
         this.fis = null;
         try {
             this.fis = new FileOutputStream(file);
@@ -60,8 +69,7 @@ public class LogHandlerClass {
         }
     };
     
-    public void openLogFile(String fileName)
-    {
+    public void openLogFile(String fileName) {
         this.openFile(fileName);
 
         System.setOut(this.out);  
@@ -72,8 +80,7 @@ public class LogHandlerClass {
         System.out.println("Log Start: ["+sdf.format(this.cal.getTime())+"]");
     };
     
-    public void openXMLFile(String fileName)
-    {
+    public void openXMLFile(String fileName) {
         String xmlstr ="<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>";
         this.openFile(fileName);
         this.printLnToFile(xmlstr);
@@ -83,7 +90,6 @@ public class LogHandlerClass {
         this.cal.getTime(); 
         String dataactual = sdfdate.format(this.cal.getTime())+"";
         this.printLnToFile("<creation date=\""+dataactual+"\" time=\""+sdf.format(this.cal.getTime())+"\" />");
-        
         
     };
     
@@ -95,6 +101,7 @@ public class LogHandlerClass {
 
         this.closeFile();
     };
+    
     public void printToFile(String str) {
         this.out.print(str);
     };
@@ -119,8 +126,14 @@ public class LogHandlerClass {
 
         this.closeFile();
     };
+
+    //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Properties">
     
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Main">  
     public static void main(String[] args){
         String RULE_XML_FILE = "rules.xml";
           LogHandlerClass l = new LogHandlerClass();
@@ -192,4 +205,6 @@ public class LogHandlerClass {
            * l.printLnToFile("Nail it!");*/
           l.closeFile();
     }
+    //</editor-fold>
+    
 }

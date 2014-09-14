@@ -1,7 +1,7 @@
 <%-- 
     Document   : arconceptsresults
     Created on : 29/Dez/2012, 17:34:12
-    Author     : Luis
+    Author     : Luis Paiva
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -54,7 +54,7 @@
               <jsp:getProperty name="arbean" property="resultsconcepts" />
           </div>
           <div class="footer">
-            <p>Webdeveloper: Luis Paiva</p>
+            <p>Webdeveloper: Luis Paiva Paiva</p>
           </div>
         </div>
         <div id="popupTree"></div>
