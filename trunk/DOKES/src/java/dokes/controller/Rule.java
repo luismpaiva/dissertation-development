@@ -1,43 +1,53 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package dokes.controller;
+
+//<editor-fold defaultstate="collapsed" desc="Imports">
+
+import dokes.controller.ontologyenrichment.Metrics;
+
+//</editor-fold>  
 
 /**
  *
- * @author Luis
+ * @author Luis Paiva
  */
-    public class Rule {
-        public int id;
-        private String premise;
-        private String conclusion;
-        private String confidence;
-        private String conviction;
-        private String gain;
-        private String lift;
-        private String laplace;
-        private String ps;
-        private String totalsupport;
-        
-        public Rule()
-        {
-            initRule();
-        }
-        
-        public void initRule()
-        {
-            id = 0;
-            setPremise("");
-            setConclusion("");
-            setConfidence("");
-            setConviction("");
-            setGain("");
-            setLift("");
-            setLaplace("");
-            setPs("");
-            setTotalsupport("");
-        }
+public class Rule {
+
+    // <editor-fold defaultstate="collapsed" desc="Variables">
+    public int id;
+    
+    private String premise;
+    private String conclusion;
+
+    private Metrics metrics;
+    
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Constructors">
+    public Rule()
+    {
+        this.metrics = new Metrics();
+        initRule();
+    }
+
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Methods">
+    private void initRule() {
+        id = 0;
+        setPremise("");
+        setConclusion("");
+        setConfidence("");
+        setConviction("");
+        setGain("");
+        setLift("");
+        setLaplace("");
+        setPs("");
+        setTotalsupport("");
+    }
+
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Properties">
 
     /**
      * @return the premise
@@ -71,100 +81,99 @@ package dokes.controller;
      * @return the confidence
      */
     public String getConfidence() {
-        return confidence;
+        return metrics.getConfidence();
     }
 
     /**
      * @param confidence the confidence to set
      */
     public void setConfidence(String confidence) {
-        this.confidence = confidence;
+        metrics.setConfidence(confidence);
     }
 
     /**
      * @return the conviction
      */
     public String getConviction() {
-        return conviction;
+        return metrics.getConviction();
     }
 
     /**
      * @param conviction the conviction to set
      */
     public void setConviction(String conviction) {
-        this.conviction = conviction;
+        metrics.setConviction(conviction);
     }
 
     /**
      * @return the gain
      */
     public String getGain() {
-        return gain;
+        return metrics.getGain();
     }
 
     /**
      * @param gain the gain to set
      */
     public void setGain(String gain) {
-        this.gain = gain;
+        metrics.setGain(gain);
     }
 
     /**
      * @return the lift
      */
     public String getLift() {
-        return lift;
+        return metrics.getLift();
     }
 
     /**
      * @param lift the lift to set
      */
     public void setLift(String lift) {
-        this.lift = lift;
+        metrics.setLift(lift);
     }
 
     /**
      * @return the laplace
      */
     public String getLaplace() {
-        return laplace;
+        return metrics.getLaplace();
     }
 
     /**
      * @param laplace the laplace to set
      */
     public void setLaplace(String laplace) {
-        this.laplace = laplace;
+        metrics.setLaplace(laplace);
     }
 
     /**
      * @return the ps
      */
     public String getPs() {
-        return ps;
+        return metrics.getPs();
     }
 
     /**
      * @param ps the ps to set
      */
     public void setPs(String ps) {
-        this.ps = ps;
+        metrics.setPs(ps);
     }
 
     /**
      * @return the totalsupport
      */
     public String getTotalsupport() {
-        return totalsupport;
+        return metrics.getTotalsupport();
     }
 
     /**
      * @param totalsupport the totalsupport to set
      */
     public void setTotalsupport(String totalsupport) {
-        this.totalsupport = totalsupport;
+        metrics.setTotalsupport(totalsupport);
     }
-        
-        
-        
-    }
+    // </editor-fold>
+
+}

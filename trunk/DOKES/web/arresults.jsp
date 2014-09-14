@@ -1,7 +1,7 @@
 <%-- 
     Document   : arresults
     Created on : 22/Set/2012, 13:08:16
-    Author     : Luis
+    Author     : Luis Paiva
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -41,7 +41,7 @@
               <jsp:getProperty name="arbean" property="results" />
           </div>
           <div class="footer">
-            <p>Webdeveloper: Luis Paiva</p>
+            <p>Webdeveloper: Luis Paiva Paiva</p>
           </div>
         </div>
     </body>
