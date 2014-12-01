@@ -2,7 +2,8 @@ package dokes.controller.utilities;
   
 //<editor-fold defaultstate="collapsed" desc="Imports">  
 
-import dokes.controller.Rule;
+import dokes.controller.ontologyenrichment.FrequentItem;
+import dokes.controller.ontologyenrichment.Rule;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +24,22 @@ public class Database {
     private String dbUser = "";
     private String dbPass = "";
     private String dbDriver = "";
+    private LogHandlerClass log;
 
     //</editor-fold>  
 
     //<editor-fold defaultstate="collapsed" desc="Constructors">  
     public Database(){
 
+    }
+    
+    public Database(String uRL, String user, String pass, String driver, LogHandlerClass log) {
+      this.dbURL = uRL;
+      this.dbUser = user;
+      this.dbPass = pass;
+      this.dbDriver = driver;
+      
+      this.log = log;
     }
     //</editor-fold>  
 
@@ -41,10 +52,26 @@ public class Database {
       this.dbDriver = driver;
 
       try {
-        Class.forName(driver);
+        Class.forName(dbDriver);
 
         Connection con;
-        con = DriverManager.getConnection(uRL, user, pass);
+        con = DriverManager.getConnection(dbURL, dbUser, dbPass);
+
+        return con;
+      } catch (ClassNotFoundException ex) {
+        Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (SQLException ex) {
+        Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      return null;
+    }
+
+    public Connection databaseConnect(){
+      try {
+        Class.forName(dbDriver);
+
+        Connection con;
+        con = DriverManager.getConnection(dbURL, dbUser, dbPass);
 
         return con;
       } catch (ClassNotFoundException ex) {
@@ -59,7 +86,7 @@ public class Database {
       try {
         con.close();
       } catch (SQLException ex) {
-        System.out.println("Failed to Disconnect from DB: " +ex);
+        log.printLnToFile("Failed to Disconnect from DB: " +ex);
       }
       return true;
     }
@@ -75,7 +102,7 @@ public class Database {
 
           System.out.print("Result: ");
           System.out.print("key = " + key);
-          System.out.println(" val = " + val);
+          log.printLnToFile(" val = " + val);
         }
         result.close();
         select.close();
@@ -129,8 +156,6 @@ public class Database {
       return id;
     }
 
-
-
     public HashMap<Integer, ArrayList<String>> databaseGetRules(Connection con, String table) {
         HashMap<Integer, ArrayList<String>> rulesHM = new HashMap<Integer, ArrayList<String>>();
         ArrayList<String> ruleValuesAL = new ArrayList<String>();
@@ -155,7 +180,7 @@ public class Database {
             result3.next();
             ruleValuesAL.add(result3.getString(2)); // Get ConceptB
 
-            System.out.println("Rule ("+ruleNum+"): "+"«"+result2.getString(2)+"»«"+result3.getString(2)+"»");
+            // log.printLnToFile("Rule ("+ruleNum+"): "+"«"+result2.getString(2)+"»«"+result3.getString(2)+"»");
 
             ruleValuesAL.add(result.getString(4)); // Get conviction
             ruleValuesAL.add(result.getString(5)); // Get gain
@@ -166,7 +191,7 @@ public class Database {
             ruleValuesAL.add(result.getString(10)); // Get confidence
 
             rulesHM.put(ruleNum, ruleValuesAL);
-            System.out.println("Rule ("+ruleNum+"): "+"«"+result2.getString(2)+"»«"+result3.getString(2)+"»«"+result.getString(4)+"»«"+result.getString(5)+"»«"+result.getString(6)+"»«"+result.getString(7)+"»«"+result.getString(8)+"»«"+result.getString(9)+"»«"+result.getString(10)+"»");
+            log.printLnToFile("Rule ("+ruleNum+"): "+"«"+result2.getString(2)+"»«"+result3.getString(2)+"»«"+result.getString(4)+"»«"+result.getString(5)+"»«"+result.getString(6)+"»«"+result.getString(7)+"»«"+result.getString(8)+"»«"+result.getString(9)+"»«"+result.getString(10)+"»");
 
             ruleValuesAL = new ArrayList<String>();
             result2.close();
@@ -183,7 +208,8 @@ public class Database {
 
     public HashMap<Integer, Rule> databaseGetRules2(Connection con, String table) {
         HashMap<Integer, Rule> rules = new HashMap<Integer, Rule>();
-        Rule ruleValuesAL;
+        Rule rule;
+        FrequentItem premise, conclusion;
         
         try {
           Statement select = con.createStatement();
@@ -192,35 +218,90 @@ public class Database {
           String dbQuery = "SELECT * FROM "+table;
           ResultSet result = select.executeQuery(dbQuery);
 
-
-
           while(result.next()) {
-
             int ruleNum = result.getInt(1);
-            ruleValuesAL = new Rule();
-
+            rule = new Rule();
+            rule.id = ruleNum;
+                    
             String dbQuery2 = "SELECT * FROM stemmed_word WHERE idstemmed_word='"+result.getString(2)+"'";
             ResultSet result2 = select2.executeQuery(dbQuery2);
             result2.next();
-            ruleValuesAL.setPremise(result2.getString(2)); // Get ConceptA
+            premise = new FrequentItem(result2.getString(2));
+            rule.setPremise(premise); // Get ConceptA
 
             String dbQuery3 = "SELECT * FROM stemmed_word WHERE idstemmed_word='"+result.getString(3)+"'";
             ResultSet result3 = select3.executeQuery(dbQuery3);
             result3.next();
-            ruleValuesAL.setConclusion(result3.getString(2)); // Get ConceptB
+            conclusion = new FrequentItem(result3.getString(2));
+            rule.setConclusion(conclusion); // Get ConceptB
 
-            System.out.println("Rule ("+ruleNum+"): "+"«"+result2.getString(2)+"»«"+result3.getString(2)+"»");
+            // log.printLnToFile("Rule ("+rule.id+"): "+"«"+premise.getName()+"»«"+conclusion.getName()+"»");
 
-            ruleValuesAL.setConviction(result.getString(4)); // Get conviction
-            ruleValuesAL.setGain(result.getString(5)); // Get gain
-            ruleValuesAL.setLift(result.getString(6)); // Get lift
-            ruleValuesAL.setLaplace(result.getString(7)); // Get laplace
-            ruleValuesAL.setPs(result.getString(8)); // Get ps
-            ruleValuesAL.setTotalsupport(result.getString(9)); // Get support
-            ruleValuesAL.setConfidence(result.getString(10)); // Get confidence
+            rule.setConviction(result.getString(4)); // Get conviction
+            rule.setGain(result.getString(5)); // Get gain
+            rule.setLift(result.getString(6)); // Get lift
+            rule.setLaplace(result.getString(7)); // Get laplace
+            rule.setPs(result.getString(8)); // Get ps
+            rule.setTotalsupport(result.getString(9)); // Get support
+            rule.setConfidence(result.getString(10)); // Get confidence
 
-            rules.put(ruleNum, ruleValuesAL);
-            System.out.println("Rule ("+ruleNum+"): "+"«"+result2.getString(2)+"»«"+result3.getString(2)+"»«"+result.getString(4)+"»«"+result.getString(5)+"»«"+result.getString(6)+"»«"+result.getString(7)+"»«"+result.getString(8)+"»«"+result.getString(9)+"»«"+result.getString(10)+"»");
+            rules.put(rule.id, rule);
+            log.printLnToFile("Rule ("+rule.id+"): "+"«"+rule.getPremise().getName()+"»«"+rule.getConclusion().getName()+"»«"+rule.getConviction()+"»«"+rule.getGain()+"»«"
+                    + rule.getLift()+"»«"+rule.getLaplace()+"»«"+rule.getPs()+"»«"+rule.getTotalsupport()+"»«"+rule.getConfidence()+"»");
+
+            result2.close();
+            result3.close();
+          }
+          result.close();
+          select.close();
+        } catch (SQLException ex) {
+          Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return rules;
+    }
+
+    public ArrayList<Rule> databaseGetRules3(Connection con, String table) {
+        ArrayList<Rule> rules = new ArrayList<Rule>();
+        Rule rule;
+        FrequentItem premise, conclusion;
+        
+        try {
+          Statement select = con.createStatement();
+          Statement select2 = con.createStatement();
+          Statement select3 = con.createStatement();
+          String dbQuery = "SELECT * FROM "+table;
+          ResultSet result = select.executeQuery(dbQuery);
+
+          while(result.next()) {
+            rule = new Rule();
+            rule.id = result.getInt(1);
+                    
+            String dbQuery2 = "SELECT * FROM stemmed_word WHERE idstemmed_word='"+result.getString(2)+"'";
+            ResultSet result2 = select2.executeQuery(dbQuery2);
+            result2.next();
+            premise = new FrequentItem(result2.getString(2));
+            rule.setPremise(premise); // Get ConceptA
+
+            String dbQuery3 = "SELECT * FROM stemmed_word WHERE idstemmed_word='"+result.getString(3)+"'";
+            ResultSet result3 = select3.executeQuery(dbQuery3);
+            result3.next();
+            conclusion = new FrequentItem(result3.getString(2));
+            rule.setConclusion(conclusion); // Get ConceptB
+
+            // log.printLnToFile("Rule ("+rule.id+"): "+"«"+premise.getName()+"»«"+conclusion.getName()+"»");
+
+            rule.setConviction(result.getString(4)); // Get conviction
+            rule.setGain(result.getString(5)); // Get gain
+            rule.setLift(result.getString(6)); // Get lift
+            rule.setLaplace(result.getString(7)); // Get laplace
+            rule.setPs(result.getString(8)); // Get ps
+            rule.setTotalsupport(result.getString(9)); // Get support
+            rule.setConfidence(result.getString(10)); // Get confidence
+
+            rules.add(rule);
+            log.printLnToFile("Rule ("+rule.id+"): "+"«"+rule.getPremise().getName()+"»«"+rule.getConclusion().getName()+"»«"+rule.getConviction()+"»«"+rule.getGain()+"»«"
+                    + rule.getLift()+"»«"+rule.getLaplace()+"»«"+rule.getPs()+"»«"+rule.getTotalsupport()+"»«"+rule.getConfidence()+"»");
 
             result2.close();
             result3.close();
@@ -269,7 +350,7 @@ public class Database {
             ruleValuesAL.add(result.getString(10)); // Get confidence
 
             rulesHM.put(ruleNum, ruleValuesAL);
-            System.out.println("Rule ("+ruleNum+"): "+"«"+result2.getString(1)+"»«"+result3.getString(1)+"»«"+result.getString(4)+"»«"+result.getString(5)+"»«"+result.getString(6)+"»«"+result.getString(7)+"»«"+result.getString(8)+"»«"+result.getString(9)+"»«"+result.getString(10)+"»");
+            log.printLnToFile("Rule ("+ruleNum+"): "+"«"+result2.getString(1)+"»«"+result3.getString(1)+"»«"+result.getString(4)+"»«"+result.getString(5)+"»«"+result.getString(6)+"»«"+result.getString(7)+"»«"+result.getString(8)+"»«"+result.getString(9)+"»«"+result.getString(10)+"»");
 
             ruleValuesAL = new ArrayList<String>();
             result2.close();
@@ -319,7 +400,7 @@ public class Database {
             ruleValuesAL.add(result.getString(9)); // Get support
             ruleValuesAL.add(result.getString(10)); // Get confidence
 
-            System.out.println("Rule ("+rulenumber+"): "+"«"+result.getString(2)+"»«"+result.getString(3)+"»«"+result.getString(4)+"»«"+result.getString(5)+"»«"+result.getString(6)+"»«"+result.getString(7)+"»«"+result.getString(8)+"»«"+result.getString(9)+"»«"+result.getString(10)+"»");
+            log.printLnToFile("Rule ("+rulenumber+"): "+"«"+result.getString(2)+"»«"+result.getString(3)+"»«"+result.getString(4)+"»«"+result.getString(5)+"»«"+result.getString(6)+"»«"+result.getString(7)+"»«"+result.getString(8)+"»«"+result.getString(9)+"»«"+result.getString(10)+"»");
 
           }
           result.close();
@@ -338,9 +419,9 @@ public class Database {
         int result = select.executeUpdate(dbQuery);
 
         if (result > 0)
-          System.out.println("All records deleted from table "+table+".");
+          log.printLnToFile("All records deleted from table "+table+".");
         else 
-          System.out.println("No records deleted from table "+table+".");
+          log.printLnToFile("No records deleted from table "+table+".");
         dbQuery = "ALTER TABLE "+table+" AUTO_INCREMENT = 1";
         result = select.executeUpdate(dbQuery);
 
@@ -361,7 +442,7 @@ public class Database {
         for (int i=0; i<numColumns-1; i++){
           System.out.print("«i:"+(i)+"» ");
           pstmt.setString(i+2, values[i]);
-          System.out.println("«"+(i+2)+"» "+values[i]+" --");
+          log.printLnToFile("«"+(i+2)+"» "+values[i]+" --");
         }
 
         pstmt.executeUpdate(); // execute insert statement
@@ -416,8 +497,8 @@ public class Database {
 
       //String sqlQuery = "SELECT * FROM rules_stemmed";
       String[] values = {valuesAL.get(1),valuesAL.get(2),valuesAL.get(3),valuesAL.get(4),valuesAL.get(5),valuesAL.get(6),valuesAL.get(7),valuesAL.get(8), valuesAL.get(9)}; 
-      System.out.println("Values [0]:"+valuesAL.get(0)+" [1]:"+valuesAL.get(1)+" [2]:"+valuesAL.get(2)+"Values[2]:"+valuesAL.get(2)+"Values[3]:"+valuesAL.get(3)+"Values[4]:"+valuesAL.get(4)+"Values[5]:"+valuesAL.get(5)+"Values[6]:"+valuesAL.get(6)+"Values[7]:"+valuesAL.get(7)+"Values[8]:"+valuesAL.get(8));
-      System.out.println("Values[9]:"+valuesAL.get(9));
+      log.printLnToFile("Values [0]:"+valuesAL.get(0)+" [1]:"+valuesAL.get(1)+" [2]:"+valuesAL.get(2)+"Values[2]:"+valuesAL.get(2)+"Values[3]:"+valuesAL.get(3)+"Values[4]:"+valuesAL.get(4)+"Values[5]:"+valuesAL.get(5)+"Values[6]:"+valuesAL.get(6)+"Values[7]:"+valuesAL.get(7)+"Values[8]:"+valuesAL.get(8));
+      log.printLnToFile("Values[9]:"+valuesAL.get(9));
       String query = "INSERT INTO rules_stemmed(idrules_stemmed, StemmedConceptA, StemmedConceptB, conviction, gain, lift, laplace, ps, support, confidence) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       this.databaseInsertOneDataRecord(con, query, 10, values, id);
@@ -431,8 +512,8 @@ public class Database {
 
       //String sqlQuery = "SELECT * FROM rules_stemmed";
       String[] values = {valuesAL.get(1),valuesAL.get(2),valuesAL.get(3),valuesAL.get(4),valuesAL.get(5),valuesAL.get(6),valuesAL.get(7),valuesAL.get(8), valuesAL.get(9)}; 
-      System.out.println("Values [0]:"+valuesAL.get(0)+" [1]:"+valuesAL.get(1)+" [2]:"+valuesAL.get(2)+"Values[2]:"+valuesAL.get(2)+"Values[3]:"+valuesAL.get(3)+"Values[4]:"+valuesAL.get(4)+"Values[5]:"+valuesAL.get(5)+"Values[6]:"+valuesAL.get(6)+"Values[7]:"+valuesAL.get(7)+"Values[8]:"+valuesAL.get(8));
-      System.out.println("Values[9]:"+valuesAL.get(9));
+      log.printLnToFile("Values [0]:"+valuesAL.get(0)+" [1]:"+valuesAL.get(1)+" [2]:"+valuesAL.get(2)+"Values[2]:"+valuesAL.get(2)+"Values[3]:"+valuesAL.get(3)+"Values[4]:"+valuesAL.get(4)+"Values[5]:"+valuesAL.get(5)+"Values[6]:"+valuesAL.get(6)+"Values[7]:"+valuesAL.get(7)+"Values[8]:"+valuesAL.get(8));
+      log.printLnToFile("Values[9]:"+valuesAL.get(9));
       String query = "INSERT INTO rules_stemmed(idrules_stemmed, idstemmed_wordA, idstemmed_wordB, conviction, gain, lift, laplace, ps, support, confidence) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
       this.databaseInsertOneDataRecord(con, query, 10, values, id);

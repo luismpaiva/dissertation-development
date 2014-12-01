@@ -21,7 +21,7 @@ function conceptsTree(id) {
 
 function getOntologyTree() {
     $.ajax({
-        url: "/HelloWeb/ConceptsTree",
+        url: "/DOKES/ConceptsTree",
         type: "POST",
         dataType: "json",
         success: function(data) {
@@ -64,7 +64,7 @@ function addNewConcept() {
 
 function callAjax(str) {
     $.ajax({
-        url: "/HelloWeb/AddConceptToOnto",
+        url: "/DOKES/AddConceptToOnto",
         type: "POST",
         data: str,
         dataType: "text",

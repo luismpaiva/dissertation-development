@@ -22,6 +22,10 @@ public class Metrics {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Methods">
+    public Metrics getMetrics()
+    {
+        return this;
+    }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Properties">
@@ -80,5 +84,5 @@ public class Metrics {
     public void setTotalsupport(String totalsupport) {
         this.totalsupport = totalsupport;
     }
-
+    //</editor-fold>
 }

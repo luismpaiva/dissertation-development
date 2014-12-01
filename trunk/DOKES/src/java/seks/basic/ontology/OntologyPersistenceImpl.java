@@ -25,7 +25,7 @@ import seks.basic.exceptions.MissingParamException;
 public class OntologyPersistenceImpl implements OntologyPersistence {
 
     private HashMap<String, String> params = new HashMap<String, String>() ;
-    private String configFilePath = "F:\\NetBeansProjects\\HelloWeb\\src\\java\\" ;
+    private String configFilePath = "D:\\NetBeansProjects\\DOKES\\src\\java\\" ;
     private static final String configFileName = "jenaConfig.xml" ;
 
     private String s_params[] = {"ont_file", "db_url", "db_user", "db_passwd", "db", "db_driver"} ;

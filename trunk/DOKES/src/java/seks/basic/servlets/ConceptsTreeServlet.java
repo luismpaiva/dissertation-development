@@ -15,7 +15,7 @@ import seks.basic.ontology.OntologyInteractionImpl;
 /**
  * Servlet implementation class ConceptsTreeServlet
  */
-@WebServlet("/ConceptsTree")
+// @WebServlet("/ConceptsTree")
 public class ConceptsTreeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
