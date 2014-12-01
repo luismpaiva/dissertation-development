@@ -21,12 +21,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import seks.basic.exceptions.MissingParamException;
 
+import dokes.controller.utilities.LogHandlerClass;
+import org.apache.commons.lang.time.StopWatch;
+
 /**
  * Implementation class of interface {@link OntologyInteraction}
  * 
  * @author Paulo Figueiras
  */
 public class OntologyInteractionImpl implements OntologyInteraction {
+    
+    LogHandlerClass log;
     
     private static String namespace = ("http://www.knowspaces.com/ontology_v1.owl#") ;
     OntModel m ;
@@ -41,10 +46,22 @@ public class OntologyInteractionImpl implements OntologyInteraction {
      */
     public OntologyInteractionImpl() {
         try {
+            StopWatch oiSt = new StopWatch();
+            oiSt.reset();
+            oiSt.start();
             OntologyPersistence op = new OntologyPersistenceImpl() ;
+            /*
             op.setS_reload(false) ;
             op.load() ;
-            this.m = op.getModel() ;
+            */
+            oiSt.stop();
+            System.out.println("<OntologyInteractionImpl Class> Time for persistence class init: "+(oiSt.toString()));
+            oiSt.reset();
+            oiSt.start();
+
+            this.m = op.getModel();
+            oiSt.stop();
+            System.out.println("<OntologyInteractionImpl Class> Time for getting model: "+(oiSt.toString()));
         } catch (MissingParamException ex) {
             Logger.getLogger(OntologyInteractionImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -54,6 +71,7 @@ public class OntologyInteractionImpl implements OntologyInteraction {
         }
     
     }
+    
     
     /*  Semantic Getters  */
     

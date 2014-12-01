@@ -39,7 +39,7 @@ public class AddConceptToOntoServlet extends HttpServlet {
         
         LogHandlerClass logFile = new LogHandlerClass();
         
-        logFile.openLogFile("F:\\Dissertacao\\FrontEnd\\AddConteptToOntoServlet.txt");
+        logFile.openLogFile("D:\\Dissertacao\\FrontEnd\\AddConteptToOntoServlet.txt");
         
         
         OntologyInteractionImpl oi = new OntologyInteractionImpl() ;

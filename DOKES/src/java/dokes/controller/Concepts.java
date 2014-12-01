@@ -1,6 +1,7 @@
 package dokes.controller;
 
 //<editor-fold defaultstate="collapsed" desc="Imports">  
+import dokes.controller.ontologyenrichment.Keyword;
 import java.util.ArrayList;
 import java.util.HashMap;
 import seks.basic.ontology.OntologyInteractionImpl;
@@ -24,19 +25,39 @@ public class Concepts {
     
   private static String namespace = ("http://www.knowspaces.com/ontology_v1.owl#");
   private ArrayList<String> allkeywords;
+
+  private ArrayList<Keyword> keywords;
+  private /* static*/ OntologyInteractionImpl oi;
   
   //</editor-fold>
   
   //<editor-fold defaultstate="collapsed" desc="Constructors">  
   
-  public Concepts(OntologyInteractionImpl oi) {
+  public Concepts() {
+      
+      /*
+      this.oi = new OntologyInteractionImpl();
+      this.allkeywords = oi.getAllValuesFromProperty("has_Keyword");
+      */
+      
+  }
+  
+  public Concepts(OntologyInteractionImpl oi)
+  {
+      this.oi = oi;
       this.allkeywords = oi.getAllValuesFromProperty("has_Keyword");
   }
   
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="Methods">  
-
+  
+  /**
+   * Receives a word in the form of xxxx_yyyy_zzzz with a specific separator (in this example sperator is "_" ) and separates it in an array list in form of {"xxxx", "yyyy", "zzzz"}
+   * @param wordProcessing
+   * @param separator
+   * @return 
+   */
   public ArrayList<String> processWord(String wordProcessing, String separator) {
     ArrayList<String> arrayListResult = new ArrayList<String> ();
     int underscorePos;
@@ -51,7 +72,10 @@ public class Concepts {
     
     return arrayListResult;
   }
-
+  
+  public boolean hasKeywords() {
+      return keywords.isEmpty();
+  }
   //</editor-fold>
 
   //<editor-fold defaultstate="collapsed" desc="Properties">  
@@ -62,7 +86,7 @@ public class Concepts {
    * @return 0 for no matches or the arrayListResult with all matches
    */
   
-  public ArrayList<String> getNgramList(String word, OntologyInteractionImpl oi){
+  public ArrayList<String> getNgramList(String word){
     ArrayList<String> arrayListResult = new ArrayList<String> ();
     ArrayList<String> ngramList;
     ArrayList<String> keywordList;
@@ -107,7 +131,7 @@ public class Concepts {
    * @param word (the n-gram word to evaluate)
    * @return 0 for no approximate matches or the arrayListResult with all candidate matches
    */
-  public ArrayList<String> getOnegramCandidatesList(String word, OntologyInteractionImpl oi){
+  public ArrayList<String> getOnegramCandidatesList(String word){
     ArrayList<String> arrayListResult = new ArrayList<String> ();
     ArrayList<String> ngramList = new ArrayList<String> ();
     ArrayList<String> keywordList = new ArrayList<String> ();
@@ -140,7 +164,7 @@ public class Concepts {
     return arrayListResult;
   }
   
-  public HashMap <String, ArrayList<String>> getOnegramCandidatesListV2(String word, OntologyInteractionImpl oi){
+  public HashMap <String, ArrayList<String>> getOnegramCandidatesListV2(String word){
     ArrayList<String> arrayListLevel1Result = new ArrayList<String> ();
     
     ArrayList<String> arrayListLevel2Result = new ArrayList<String> ();
@@ -185,7 +209,7 @@ public class Concepts {
 
     return resultHM;
   }
-  public HashMap <String, ArrayList<String>> getOnegramCandidatesListV3(String word, OntologyInteractionImpl oi){
+  public HashMap <String, ArrayList<String>> getOnegramCandidatesListV3(String word){
     ArrayList<String> resultAL = new ArrayList<String> ();
     ArrayList<String> keywordList = new ArrayList<String> ();
     HashMap <String, ArrayList<String>> hmResult = new HashMap ();
@@ -248,7 +272,7 @@ public class Concepts {
     return levelName;
   }
   
-  public HashMap <String, ArrayList<String>> getNgramListV2(String word, OntologyInteractionImpl oi){
+  public HashMap <String, ArrayList<String>> getNgramListV2(String word){
     ArrayList<String> arrayListLevel1Result = new ArrayList<String> ();
     ArrayList<String> arrayListLevel2Result = new ArrayList<String> ();
     ArrayList<String> keywordList = new ArrayList<String> ();
@@ -295,7 +319,7 @@ public class Concepts {
     return hmResult;
   }
   
-  public HashMap <String, ArrayList<String>> getBigramCandidatesList(String word, OntologyInteractionImpl oi){
+  public HashMap <String, ArrayList<String>> getBigramCandidatesList(String word){
     HashMap <String, ArrayList<String>> levelCandidates = new HashMap<String, ArrayList<String>>();
     ArrayList<String> level0 = new ArrayList<String> ();
     ArrayList<String> level1 = new ArrayList<String> ();
@@ -393,7 +417,7 @@ public class Concepts {
     return levelCandidates;
   }
   
-  public HashMap <String, ArrayList<String>> getBigramCandidatesListV2(String word, OntologyInteractionImpl oi){
+  public HashMap <String, ArrayList<String>> getBigramCandidatesListV2(String word){
     ArrayList<String> arrayListLevel1Result = new ArrayList<String> ();
     ArrayList<String> arrayListLevel2Result = new ArrayList<String> ();
     ArrayList<String> keywordList = new ArrayList<String> ();
@@ -440,7 +464,7 @@ public class Concepts {
     return hmResult;
   }
   
-  public HashMap<String, ArrayList<String>> getConceptsRelated(ArrayList<String> keywordList, OntologyInteractionImpl oi){
+  public HashMap<String, ArrayList<String>> getConceptsRelated(ArrayList<String> keywordList){
     HashMap<String,ArrayList<String>> conceptsList = new HashMap<String,ArrayList<String>> ();
     
     if (!keywordList.isEmpty())
@@ -450,9 +474,9 @@ public class Concepts {
     return conceptsList;
   }
   
-  public HashMap<String, ArrayList<String>> getAllConceptsRelated(String word, OntologyInteractionImpl oi){
+  public HashMap<String, ArrayList<String>> getAllConceptsRelated(String word){
     
-    return getConceptsRelated(getNgramList(word, oi), oi);
+    return getConceptsRelated(getNgramList(word));
   }
   
   public String getClassColorConceptsName (int classNumber){
@@ -473,6 +497,14 @@ public class Concepts {
                         }
     return ngramsMatchColorClass;
   }
+  
+  public ArrayList<String> getAllkeywords() {
+      return allkeywords;
+  }
+
+  public void setAllkeywords(ArrayList<String> allkeywords) {
+      this.allkeywords = allkeywords;
+  }
 
   //</editor-fold>
   
@@ -486,7 +518,6 @@ public class Concepts {
           HashMap<String,ArrayList<String>> allConceptsUnigramsList = new HashMap<String,ArrayList<String>> ();
           HashMap<String,ArrayList<String>> levelCandidates = new HashMap<String,ArrayList<String>> ();
           HashMap<Integer,ArrayList<String>> testHM = new HashMap<Integer,ArrayList<String>> ();*/
-          OntologyInteractionImpl oi = new OntologyInteractionImpl() ;
           OntologyPersistenceImpl op = new OntologyPersistenceImpl() ;
           /*ArrayList<String> allkeywords2;
           allkeywords2 = oi.getAllValuesFromProperty("has_Keyword");
@@ -687,10 +718,13 @@ public class Concepts {
           String owlClassName = "Concept";
           
           String owlSetClassName = "Object2";
-
+          
+          OntologyInteractionImpl oi = new OntologyInteractionImpl();
+          
           ArrayList <String> allclasses = oi.getSubclasses("Concept");
-          for (int a=0; a<allclasses.size(); a++)
-              System.out.println("Concept subclasses: "+allclasses.get(a));
+          for (String allclasse : allclasses) {
+              System.out.println("Concept subclasses: " + allclasse);
+          }
           
           boolean xpto = oi.isIndividual("Actor_Individual");
           System.out.println("Actor_Individual is in DB? "+xpto);
@@ -714,7 +748,7 @@ public class Concepts {
           System.out.println("Writing next...") ;
 
           try {
-              File file = new File("F:\\Dissertacao\\FrontEnd\\OWLtest.txt");              
+              File file = new File("D:\\Dissertacao\\FrontEnd\\OWLtest.txt");              
               //FileOutputStream fis;              
               //fis = new FileOutputStream(file);
               //System.out.println(op.getModel());
