@@ -84,7 +84,24 @@ public class DinOntAssociationRules {
     private Rule rule = new Rule();
     private ArrayList<String> allKeywords;
 
-    //</editor-fold>
+    // Strings for XML Elements
+		private String conceptStr = "concept";
+		private String ruleStr = "rule";
+		private String keywordStr = "keyword";
+		private String optionsStr = "options";
+		private String optionStr = "option";
+		private String nameStr = "name";
+		private String distanceStr = "distance";
+		private String metricsStr = "metrics";
+		private String supportStr = "support";
+		private String confidenceStr = "confidence";
+		private String convictionStr = "conviction";
+		private String gainStr = "gain";
+		private String liftStr = "lift";
+		private String psStr = "ps";	
+		private String laplaceStr = "laplace";
+
+		//</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc="Constructors">
 
@@ -314,20 +331,20 @@ public class DinOntAssociationRules {
 
         Element creationinfo = new Element("creationinfo");
         
-        Element ruleElement = new Element("rule");
-        Element conceptElement = new Element("concept");
-        Element keywordElement = new Element("keyword");
-        Element optionsElement = new Element("options");
-        Element optionElement = new Element("option");
-        Element optionNameElement = new Element("name");
-        Element optionDistanceElement = new Element("distance");
+        Element ruleElement = new Element(ruleStr);
+        Element conceptElement = new Element(conceptStr);
+        Element keywordElement = new Element(keywordStr);
+        Element optionsElement = new Element(optionsStr);
+        Element optionElement = new Element(optionStr);
+        Element optionNameElement = new Element(nameStr);
+        Element optionDistanceElement = new Element(distanceStr);
         
-        Element metricsElement = new Element("metrics");
-        Element supportXML = new Element("support");
-        Element confidenceXML = new Element("confidence");
-        Element convictionXML = new Element("conviction");
-        Element gainXML = new Element("gain");
-        Element liftXML = new Element("lift");
+        Element metricsElement = new Element(metricsStr);
+        Element supportXML = new Element(supportStr);
+        Element confidenceXML = new Element(confidenceStr);
+        Element convictionXML = new Element(convictionStr);
+        Element gainXML = new Element(gainStr);
+        Element liftXML = new Element(liftStr);
         Element psXML = new Element("ps");
         Element laplaceXML = new Element("laplace");
         
@@ -443,14 +460,17 @@ public class DinOntAssociationRules {
                                                             allConceptsRelatedAL.add(premiseWordList.get(m2));
                                                             allConceptsRelatedSimilarityHM.put(premiseWordList.get(m2), distancePercentage);
                                                             log.printLnToFile("(" + (rule.id) + ") Common words Cosine similarity:" + "<" + premise.getName() + "><" + cp.processWord(ngramsListHM.get(premise.getName()).get(m2), " ").toString() + "> = " + "«" + df.format(distancePercentage) + "%»");
-                                                            optionElement.setAttribute("exactmatch", "NO");
+                                                            // set content
+																														optionElement.setAttribute("exactmatch", "NO");
                                                             optionNameElement.setText(premiseWordList.get(m2).toString());
                                                             optionDistanceElement.setText(df.format(distancePercentage));
-                                                            optionElement.addContent(optionNameElement);
+                                                            // add content
+																														optionElement.addContent(optionNameElement);
                                                             optionElement.addContent(optionDistanceElement);
                                                             optionsElement.addContent(optionElement);
-                                                            optionElement = new Element("option");
-                                                            optionNameElement = new Element("name");
+                                                            // reset element
+																														optionElement = new Element(optionStr);
+                                                            optionNameElement = new Element(nameStr);
                                                             optionDistanceElement = new Element("distance");
                                                         }
                                                     }
@@ -491,14 +511,17 @@ public class DinOntAssociationRules {
                                                             allConceptsRelatedAL.add(premiseWordList.get(m2));
                                                             allConceptsRelatedSimilarityHM.put(premiseWordList.get(m2), distancePercentage);
                                                             log.printLnToFile("(" + (rule.id) + ") Common words Cosine similarity:" + "<" + premise.getName() + "><" + cp.processWord(ngramsListHM.get(premise.getName()).get(m2), " ") + "> = " + "«" + df.format(distancePercentage) + "%»");
-                                                            optionElement.setAttribute("exactmatch", "NO");
+                                                            // set content
+																														optionElement.setAttribute("exactmatch", "NO");
                                                             optionNameElement.setText(premiseWordList.get(m2).toString());
                                                             optionDistanceElement.setText(df.format(distancePercentage));
-                                                            optionElement.addContent(optionNameElement);
+                                                            // add content
+																														optionElement.addContent(optionNameElement);
                                                             optionElement.addContent(optionDistanceElement);
                                                             optionsElement.addContent(optionElement);
-                                                            optionElement = new Element("option");
-                                                            optionNameElement = new Element("name");
+                                                            // reset element
+																														optionElement = new Element(optionStr);
+                                                            optionNameElement = new Element(nameStr);
                                                             optionDistanceElement = new Element("distance");
                                                         }
                                                     }
@@ -531,14 +554,17 @@ public class DinOntAssociationRules {
                                     premiseWordString += "<option class=\"level0\" value=\"" + premiseWordList.get(j2) + "\">" + premiseWordList.get(j2).replace("_Individual", "").replace("_", " ") + " (100"/*+df.format(distancePercentage)*/ + "%)</option>";
                                     allConceptsRelatedAL.add(premiseWordList.get(j2));
                                     allConceptsRelatedSimilarityHM.put(premiseWordList.get(j2), distancePercentage);
-                                    optionElement.setAttribute("exactmatch", "YES");
+                                    // set content
+																		optionElement.setAttribute("exactmatch", "YES");
                                     optionNameElement.setText(premiseWordList.get(j2).toString());
                                     optionDistanceElement.setText(df.format(distancePercentage));
-                                    optionElement.addContent(optionNameElement);
+                                    // add content
+																		optionElement.addContent(optionNameElement);
                                     optionElement.addContent(optionDistanceElement);
                                     optionsElement.addContent(optionElement);
-                                    optionElement = new Element("option");
-                                    optionNameElement = new Element("name");
+                                    // reset elements
+																		optionElement = new Element(optionStr);
+                                    optionNameElement = new Element(nameStr);
                                     optionDistanceElement = new Element("distance");
                                 }
                             }
@@ -561,14 +587,17 @@ public class DinOntAssociationRules {
                                                     allConceptsRelatedAL.add(premiseWordList.get(m2));
                                                     allConceptsRelatedSimilarityHM.put(premiseWordList.get(m2), distancePercentage);
                                                     log.printLnToFile("(" + (rule.id) + ") Common words Cosine similarity:" + "<" + premise.getName() + "><" + cp.processWord(ngramsListHM.get(premise.getName()).get(m2), " ") + "> = " + "«" + df.format(distancePercentage) + "%»");
-                                                    optionElement.setAttribute("exactmatch", "NO");
+                                                    // set content
+																										optionElement.setAttribute("exactmatch", "NO");
                                                     optionNameElement.setText(premiseWordList.get(m2).toString());
                                                     optionDistanceElement.setText(df.format(distancePercentage));
-                                                    optionElement.addContent(optionNameElement);
+                                                    // add content 
+																										optionElement.addContent(optionNameElement);
                                                     optionElement.addContent(optionDistanceElement);
                                                     optionsElement.addContent(optionElement);
-                                                    optionElement = new Element("option");
-                                                    optionNameElement = new Element("name");
+                                                    // reset elements
+																										optionElement = new Element(optionStr);
+                                                    optionNameElement = new Element(nameStr);
                                                     optionDistanceElement = new Element("distance");
                                                 }
                                             }
@@ -635,14 +664,17 @@ public class DinOntAssociationRules {
                                                     allConceptsRelatedSimilarityHM.put(premiseWordList.get(m2), distancePercentage);
                                                     premiseWordString += "<option class=\"" + cp.getSimilarityClass(distancePercentage) + "\" value=\"" + premiseWordList.get(m2) + "\">" + premiseWordList.get(m2).replace("_Individual", "").replace("_", " ") + " (" + df.format(distancePercentage) + "%)</option>";
                                                     log.printLnToFile("(" + (rule.id) + ") Common words Cosine similarity:" + "<" + premise.getName() + "><" + cp.processWord(ngramsListHM.get(premise.getName()).get(m2), " ") + "> = " + "«" + df.format(distancePercentage) + "%»");
-                                                    optionElement.setAttribute("exactmatch", "NO");
+                                                    // set content
+																										optionElement.setAttribute("exactmatch", "NO");
                                                     optionNameElement.setText(premiseWordList.get(m2).toString());
                                                     optionDistanceElement.setText(df.format(distancePercentage));
-                                                    optionElement.addContent(optionNameElement);
+                                                    // add content
+																										optionElement.addContent(optionNameElement);
                                                     optionElement.addContent(optionDistanceElement);
                                                     optionsElement.addContent(optionElement);
-                                                    optionElement = new Element("option");
-                                                    optionNameElement = new Element("name");
+                                                    // reset elements
+																										optionElement = new Element(optionStr);
+                                                    optionNameElement = new Element(nameStr);
                                                     optionDistanceElement = new Element("distance");
                                                 }
                                             }
@@ -685,14 +717,16 @@ public class DinOntAssociationRules {
                             similarityString = df.format(similarity);
                         } 
 
-                        
+                        // set content
                         optionNameElement.setText(allConceptsRelatedAL.get(i3).toString());
                         optionDistanceElement.setText(df.format(similarity));
-                        optionElement.addContent(optionNameElement);
+                        // add content
+												optionElement.addContent(optionNameElement);
                         optionElement.addContent(optionDistanceElement);
                         optionsElement.addContent(optionElement);
-                        optionElement = new Element("option");
-                        optionNameElement = new Element("name");
+                        // reset elements
+												optionElement = new Element(optionStr);
+                        optionNameElement = new Element(nameStr);
                         optionDistanceElement = new Element("distance");
 
                         premiseWordString += "<option class=\"" + cp.getSimilarityClass(similarity) + "\"value=\"" + allConceptsRelatedAL.get(i3) + "\">" + allConceptsRelatedAL.get(i3).replace("_Individual", "").replace("_", " ") + " (" + similarityString + "%)</option>";
@@ -705,11 +739,11 @@ public class DinOntAssociationRules {
                 
                 ruleElement.addContent(conceptElement);
                 
-                conceptElement = new Element("concept");
-                optionsElement = new Element("options");
-                keywordElement = new Element("keyword");
-                optionElement = new Element("option");
-                optionNameElement = new Element("name");
+                conceptElement = new Element(conceptStr);
+                optionsElement = new Element(optionsStr);
+                keywordElement = new Element(keywordStr);
+                optionElement = new Element(optionStr);
+                optionNameElement = new Element(nameStr);
                 optionDistanceElement = new Element("distance");
 
                 allConceptsRelatedAL = new ArrayList<String>();
@@ -761,14 +795,17 @@ public class DinOntAssociationRules {
                                                             allConceptsRelatedSimilarityHM.put(conclusionWordList.get(m2), distancePercentage);
                                                             conclusionWordString += "<option class=\"" + cp.getSimilarityClass(distancePercentage) + "\" value=\"" + conclusionWordList.get(m2) + "\">" + conclusionWordList.get(m2).replace("_Individual", "").replace("_", " ") + " (" + df.format(distancePercentage) + "%)</option>";
                                                             log.printLnToFile("(" + (rule.id) + ") Common words Cosine similarity:" + "<" + conclusion.getName() + "><" + cp.processWord(ngramsListHM.get(conclusion.getName()).get(m2), " ") + "> = " + "«" + df.format(distancePercentage) + "%»");
-                                                            optionElement.setAttribute("exactmatch", "NO");
+                                                            // set content
+																														optionElement.setAttribute("exactmatch", "NO");
                                                             optionNameElement.setText(conclusionWordList.get(m2).toString());
                                                             optionDistanceElement.setText(df.format(distancePercentage));
-                                                            optionElement.addContent(optionNameElement);
+                                                            // add content
+																														optionElement.addContent(optionNameElement);
                                                             optionElement.addContent(optionDistanceElement);
                                                             optionsElement.addContent(optionElement);
-                                                            optionElement = new Element("option");
-                                                            optionNameElement = new Element("name");
+                                                            // reset Elements
+																														optionElement = new Element(optionStr);
+                                                            optionNameElement = new Element(nameStr);
                                                             optionDistanceElement = new Element("distance");
                                                         }
                                                     }
@@ -806,14 +843,17 @@ public class DinOntAssociationRules {
                                                         allConceptsRelatedSimilarityHM.put(conclusionWordList.get(m2), distancePercentage);
                                                         conclusionWordString += "<option class=\"" + cp.getSimilarityClass(distancePercentage) + "\" value=\"" + conclusionWordList.get(m2) + "\">" + conclusionWordList.get(m2).replace("_Individual", "").replace("_", " ") + " (" + df.format(distancePercentage) + "%)</option>";
                                                         log.printLnToFile("(" + (rule.id) + ") Common words Cosine similarity:" + "<" + conclusion.getName() + "><" + cp.processWord(ngramsListHM.get(conclusion.getName()).get(m2), " ") + "> = " + "«" + df.format(distancePercentage) + "%»");
-                                                        optionElement.setAttribute("exactmatch", "NO");
+                                                        // set content
+																												optionElement.setAttribute("exactmatch", "NO");
                                                         optionNameElement.setText(conclusionWordList.get(m2).toString());
                                                         optionDistanceElement.setText(df.format(distancePercentage));
-                                                        optionElement.addContent(optionNameElement);
+                                                        // add content
+																												optionElement.addContent(optionNameElement);
                                                         optionElement.addContent(optionDistanceElement);
                                                         optionsElement.addContent(optionElement);
-                                                        optionElement = new Element("option");
-                                                        optionNameElement = new Element("name");
+                                                        // reset elements
+																												optionElement = new Element(optionStr);
+                                                        optionNameElement = new Element(nameStr);
                                                         optionDistanceElement = new Element("distance");
                                                     }
                                                 }
@@ -846,14 +886,17 @@ public class DinOntAssociationRules {
                                     conclusionWordString += "<option class=\"level0\" value=\"" + conclusionWordList.get(j2) + "\">" + conclusionWordList.get(j2).replace("_Individual", "").replace("_", " ") + " (100%)</option>";
                                     allConceptsRelatedAL.add(conclusionWordList.get(j2));
                                     allConceptsRelatedSimilarityHM.put(conclusionWordList.get(j2), distancePercentage);
-                                    optionElement.setAttribute("exactmatch", "YES");
+                                    //set content
+																		optionElement.setAttribute("exactmatch", "YES");
                                     optionNameElement.setText(conclusionWordList.get(j2).toString());
                                     optionDistanceElement.setText(df.format(distancePercentage));
-                                    optionElement.addContent(optionNameElement);
+                                    //add content
+																		optionElement.addContent(optionNameElement);
                                     optionElement.addContent(optionDistanceElement);
                                     optionsElement.addContent(optionElement);
-                                    optionElement = new Element("option");
-                                    optionNameElement = new Element("name");
+                                    // reset elements
+																		optionElement = new Element(optionStr);
+                                    optionNameElement = new Element(nameStr);
                                     optionDistanceElement = new Element("distance");
                                 }
                             }
@@ -878,14 +921,17 @@ public class DinOntAssociationRules {
                                                     allConceptsRelatedSimilarityHM.put(conclusionWordList.get(m2), distancePercentage);
                                                     conclusionWordString += "<option class=\"" + cp.getSimilarityClass(distancePercentage) + "\" value=\"" + conclusionWordList.get(m2) + "\">" + conclusionWordList.get(m2).replace("_Individual", "").replace("_", " ") + " (" + df.format(distancePercentage) + "%)</option>";
                                                     log.printLnToFile("(" + (rule.id) + ") Common words Cosine similarity:" + "<" + conclusion.getName() + "><" + cp.processWord(ngramsListHM.get(conclusion.getName()).get(m2), " ") + "> = " + "«" + df.format(distancePercentage) + "%»");
-                                                    optionElement.setAttribute("exactmatch", "NO");
+                                                    // set content
+																										optionElement.setAttribute("exactmatch", "NO");
                                                     optionNameElement.setText(conclusionWordList.get(m2).toString());
                                                     optionDistanceElement.setText(df.format(distancePercentage));
-                                                    optionElement.addContent(optionNameElement);
+                                                    // add content
+																										optionElement.addContent(optionNameElement);
                                                     optionElement.addContent(optionDistanceElement);
                                                     optionsElement.addContent(optionElement);
-                                                    optionElement = new Element("option");
-                                                    optionNameElement = new Element("name");
+                                                    // reset elements
+																										optionElement = new Element(optionStr);
+                                                    optionNameElement = new Element(nameStr);
                                                     optionDistanceElement = new Element("distance");
                                                 }
                                             }
@@ -959,8 +1005,8 @@ public class DinOntAssociationRules {
                                                     optionElement.addContent(optionNameElement);
                                                     optionElement.addContent(optionDistanceElement);
                                                     optionsElement.addContent(optionElement);
-                                                    optionElement = new Element("option");
-                                                    optionNameElement = new Element("name");
+                                                    optionElement = new Element(optionStr);
+                                                    optionNameElement = new Element(nameStr);
                                                     optionDistanceElement = new Element("distance");
                                                 }
                                             }
@@ -1014,8 +1060,8 @@ public class DinOntAssociationRules {
                         optionElement.addContent(optionNameElement);
                         optionElement.addContent(optionDistanceElement);
                         optionsElement.addContent(optionElement);
-                        optionElement = new Element("option");
-                        optionNameElement = new Element("name");
+                        optionElement = new Element(optionStr);
+                        optionNameElement = new Element(nameStr);
                         optionDistanceElement = new Element("distance");
                     }
                     conclusionWordString += "</select>";
@@ -1111,14 +1157,14 @@ public class DinOntAssociationRules {
                 
                 // XML Cleaning xml elements for new rule
                 
-                ruleElement = new Element("rule");
+                ruleElement = new Element(ruleStr);
 
-                conceptElement = new Element("concept");
-                optionsElement = new Element("options");
-                keywordElement = new Element("keyword");
-                optionsElement = new Element("options");
-                optionElement = new Element("option");
-                optionNameElement = new Element("name");
+                conceptElement = new Element(conceptStr);
+                optionsElement = new Element(optionsStr);
+                keywordElement = new Element(keywordStr);
+                optionsElement = new Element(optionsStr);
+                optionElement = new Element(optionStr);
+                optionNameElement = new Element(nameStr);
                 optionDistanceElement = new Element("distance");
                 
                 metricsElement = new Element("metrics");
@@ -1126,7 +1172,7 @@ public class DinOntAssociationRules {
                 confidenceXML = new Element("confidence");
                 convictionXML = new Element("conviction");
                 gainXML = new Element("gain");
-                liftXML = new Element("lift");
+                liftXML = new Element(liftStr);
                 psXML = new Element("ps");
                 laplaceXML = new Element("laplace");
                 
@@ -1198,27 +1244,19 @@ public class DinOntAssociationRules {
                 ruleValuesAL = rulesHM.get(i);
                 ruletosave += "<li class=\"associationrule\"><div class=\"associationrulenumber\">" + i + "</div>";
                 if (!ruleValuesAL.isEmpty()) {
+										String style="";
                     if (associationruleID == i) {
-                        ruletosave += "<div title=\"Rule Selected\" class=\"associationruleconcept\" style=\"color: red;\">" + ruleValuesAL.get(0) + "</div>"
-                                + "<div title=\"Rule Selected\" class=\"associationruleconcept\" style=\"color: red;\">" + ruleValuesAL.get(1) + "</div>"
-                                + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(8) + "</div>"
-                                + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(2) + "</div>"
-                                + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(3) + "</div>"
-                                + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(4) + "</div>"
-                                + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(5) + "</div>"
-                                + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(6) + "</div>"
-                                + "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(7) + "</div>";
-                    } else {
-                        ruletosave += "<div class=\"associationruleconcept\">" + ruleValuesAL.get(0) + "</div>"
-                                + "<div class=\"associationruleconcept\">" + ruleValuesAL.get(1) + "</div>"
-                                + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(8) + "</div>"
-                                + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(2) + "</div>"
-                                + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(3) + "</div>"
-                                + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(4) + "</div>"
-                                + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(5) + "</div>"
-                                + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(6) + "</div>"
-                                + "<div class=\"associationrulemetric\">" + ruleValuesAL.get(7) + "</div>";
-                    }
+												style = "style=\"color: red;\"";
+                    } 
+										ruletosave += "<div title=\"Rule Selected\" class=\"associationruleconcept\" "+style+">" + ruleValuesAL.get(0) + "</div>"
+														+ "<div title=\"Rule Selected\" class=\"associationruleconcept\" "+style+">" + ruleValuesAL.get(1) + "</div>"
+														+ "<div title=\"Rule Selected\" class=\"associationrulemetric\" "+style+">" + ruleValuesAL.get(8) + "</div>"
+														+ "<div title=\"Rule Selected\" class=\"associationrulemetric\" "+style+">" + ruleValuesAL.get(2) + "</div>"
+														+ "<div title=\"Rule Selected\" class=\"associationrulemetric\" "+style+">" + ruleValuesAL.get(3) + "</div>"
+														+ "<div title=\"Rule Selected\" class=\"associationrulemetric\" "+style+">" + ruleValuesAL.get(4) + "</div>"
+														+ "<div title=\"Rule Selected\" class=\"associationrulemetric\" "+style+">" + ruleValuesAL.get(5) + "</div>"
+														+ "<div title=\"Rule Selected\" class=\"associationrulemetric\" "+style+">" + ruleValuesAL.get(6) + "</div>"
+														+ "<div title=\"Rule Selected\" class=\"associationrulemetric\" style=\"color: red;\">" + ruleValuesAL.get(7) + "</div>";
                 }
                 ruletosave += "</li>";
             }
@@ -1245,7 +1283,7 @@ public class DinOntAssociationRules {
         associationruleID = 0;
         for (int m = 0; m < concepts.length; m++) {
             con = dbRules.databaseConnect(this.databaseURLName, this.databaseUserName, this.databasePasswordName, this.databaseDriverName);
-            idcontain = dbRules.databaseContainsConcept(con, this.tablenames[3], "name", concepts[m]);
+            idcontain = dbRules.databaseContainsConcept(con, this.tablenames[3], nameStr, concepts[m]);
             //dbRules.databaseDisconnect(con);
             if (idcontain == 0) {
                 con = dbRules.databaseConnect(this.databaseURLName, this.databaseUserName, this.databasePasswordName, this.databaseDriverName);
